@@ -27,9 +27,9 @@ export function NftCard({ nft }: { nft: Nft }) {
           </span>
         )}
       </div>
-      <div className="flex flex-col gap-1.5 leading-4">
-        <p className="truncate text-base text-foreground">{nft.name}</p>
-        <p className="text-lg font-bold text-text-accent">{formatEth(nft.priceFromEth)}</p>
+      <div className="flex flex-col gap-1.5">
+        <p className="truncate text-base/4 text-foreground">{nft.name}</p>
+        <p className="text-lg/4 font-bold text-text-accent">{formatEth(nft.priceFromEth)}</p>
       </div>
     </Link>
   )
@@ -41,8 +41,11 @@ export function NftCardSkeleton() {
       <div className="bg-surface-card px-1 pt-6 pb-7">
         <Skeleton className="aspect-square w-full rounded-[15px] bg-surface-dark" />
       </div>
-      <Skeleton className="h-4 w-3/5 bg-surface-card" />
-      <Skeleton className="h-4 w-2/5 bg-surface-card" />
+      {/* Mesmas alturas do texto real (2 linhas de 16px, gap 6px) para não deslocar o layout. */}
+      <div className="flex flex-col gap-1.5">
+        <Skeleton className="h-4 w-3/5 bg-surface-card" />
+        <Skeleton className="h-4 w-2/5 bg-surface-card" />
+      </div>
     </div>
   )
 }
