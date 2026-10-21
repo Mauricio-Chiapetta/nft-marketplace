@@ -108,7 +108,7 @@ export function CatalogProducts() {
             <div
               aria-busy={list.isFetching}
               className={cn(
-                'grid grid-cols-2 gap-x-4 gap-y-10 transition-opacity sm:grid-cols-3 lg:gap-x-[34px] lg:gap-y-[72px]',
+                'grid grid-cols-2 gap-x-4 gap-y-6 transition-opacity max-sm:[&>*:nth-child(even)]:mt-8 sm:grid-cols-3 sm:gap-y-10 lg:gap-x-[34px] lg:gap-y-[72px]',
                 list.isPlaceholderData && 'opacity-60',
               )}
             >
