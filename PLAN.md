@@ -74,6 +74,7 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
   - [ ] Lighthouse em início e detalhe, mobile e desktop, 3 medições cada, mediana por categoria
   - [ ] Registrar LCP, CLS, TBT, config versionada, versões das ferramentas e ambiente; justificar metas não atingidas
   - [ ] Script `lighthouse`
+  - [ ] No mobile, o hero desktop (com `fetchPriority="high"`) e a imagem do detalhe desktop ficam ocultos mas ainda baixam: trocar por `<picture>`/render condicional para não pesar o LCP
   - [ ] README: setup, variáveis de ambiente, credenciais fictícias, seleção/reset de cenários, como reproduzir as falhas
   - [ ] ARCHITECTURE.md: contratos REST e eventos, política de sessão, estado do carrinho, cache/retry/sincronização, reconciliação REST × socket, transporte do socket no mock e limitações, desvios do Figma e substituições de assets
 
