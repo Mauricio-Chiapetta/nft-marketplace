@@ -1,17 +1,28 @@
-import { useQuery } from '@tanstack/react-query'
+import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { cn } from 'cn'
 import arrowDown from '@/assets/icons/arrow-down.svg'
-import chevronRight from '@/assets/icons/chevron-right.svg'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
+import type { NftSort } from '@/types/api'
 import { nftListQuery } from '../queries'
+import { PAGE_SIZE, SORT_LABELS, effectiveSort, toListParams } from '../search'
+import { useCatalogSearch } from '../use-catalog-search'
+import { CatalogPagination } from './catalog-pagination'
 import { CatalogSidebar } from './catalog-sidebar'
 import { NftCard, NftCardSkeleton } from './nft-card'
 
-const PAGE_SIZE = 9
 const TABS = ['Todos os NFTs', 'Novos lançamentos', 'Em alta']
 
-// Layout do Figma. Busca, filtros, ordenação e paginação na URL entram na fase 3.
 export function CatalogProducts() {
-  const list = useQuery(nftListQuery({ page: 1, pageSize: PAGE_SIZE }))
+  const { search, setFilter, setPage, reset } = useCatalogSearch()
+  const list = useQuery({ ...nftListQuery(toListParams(search)), placeholderData: keepPreviousData })
+  const sort = effectiveSort(search)
+  const page = search.page ?? 1
 
   return (
     <section id="produtos" className="flex scroll-mt-6 flex-col gap-12 lg:flex-row">
@@ -40,49 +51,66 @@ export function CatalogProducts() {
                 </button>
               ))}
             </div>
-            <button type="button" className="flex items-center gap-2 text-[15px] text-foreground">
-              Ordenar por: <span>Listados recentemente</span>
-              <img src={arrowDown} alt="" width={10.83} height={6.17} />
-            </button>
+            <SortMenu value={sort} onChange={(value) => setFilter({ sort: value })} />
           </div>
 
-          <div className="grid grid-cols-2 gap-x-4 gap-y-10 sm:grid-cols-3 lg:gap-x-[34px] lg:gap-y-[72px]">
-            {list.isPending
-              ? Array.from({ length: PAGE_SIZE }, (_, i) => <NftCardSkeleton key={i} />)
-              : list.data?.items.map((nft) => <NftCard key={nft.id} nft={nft} />)}
-          </div>
-          {list.isError && (
-            <p role="alert" className="text-text-secondary">
-              Não foi possível carregar os NFTs.
-            </p>
+          <p className="sr-only" aria-live="polite">
+            {list.data ? `${list.data.total} NFTs encontrados, página ${list.data.page} de ${Math.max(list.data.totalPages, 1)}.` : ''}
+          </p>
+
+          {list.isError && !list.data ? (
+            <div role="alert" className="flex flex-col items-start gap-3 bg-surface-card p-6">
+              <p className="text-foreground">Não foi possível carregar os NFTs.</p>
+              <button type="button" onClick={() => list.refetch()} className="rounded-md bg-primary px-4 py-2 text-sm font-bold text-ink">
+                Tentar novamente
+              </button>
+            </div>
+          ) : list.data && list.data.items.length === 0 ? (
+            <div className="flex flex-col items-start gap-3 bg-surface-card p-6">
+              <p className="text-foreground">Nenhum NFT encontrado com esses critérios.</p>
+              <button type="button" onClick={reset} className="text-sm text-text-accent underline-offset-4 hover:underline">
+                Limpar filtros
+              </button>
+            </div>
+          ) : (
+            <div
+              aria-busy={list.isFetching}
+              className={cn(
+                'grid grid-cols-2 gap-x-4 gap-y-10 transition-opacity sm:grid-cols-3 lg:gap-x-[34px] lg:gap-y-[72px]',
+                list.isPlaceholderData && 'opacity-60',
+              )}
+            >
+              {list.data
+                ? list.data.items.map((nft) => <NftCard key={nft.id} nft={nft} />)
+                : Array.from({ length: PAGE_SIZE }, (_, i) => <NftCardSkeleton key={i} />)}
+            </div>
           )}
         </div>
 
         {list.data && list.data.totalPages > 1 && (
-          <nav aria-label="Paginação" className="flex items-center gap-2">
-            {Array.from({ length: Math.min(list.data.totalPages, 4) }, (_, i) => i + 1).map((n) => (
-              <button
-                key={n}
-                type="button"
-                aria-current={n === list.data.page ? 'page' : undefined}
-                className={cn(
-                  'grid size-[35px] place-items-center rounded-[4px] text-lg leading-4',
-                  n === list.data.page ? 'bg-primary font-bold text-ink' : 'border border-border text-foreground',
-                )}
-              >
-                {n}
-              </button>
-            ))}
-            <button
-              type="button"
-              aria-label="Próxima página"
-              className="grid size-[35px] place-items-center rounded-[4px] border border-border"
-            >
-              <img src={chevronRight} alt="" width={12} height={6.75} className="-rotate-90" />
-            </button>
-          </nav>
+          <CatalogPagination page={page} totalPages={list.data.totalPages} onChange={setPage} />
         )}
       </div>
     </section>
+  )
+}
+
+function SortMenu({ value, onChange }: { value: NftSort; onChange: (value: NftSort) => void }) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger className="flex items-center gap-2 rounded-sm text-[15px] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring">
+        Ordenar por: <span>{SORT_LABELS[value]}</span>
+        <img src={arrowDown} alt="" width={10.83} height={6.17} />
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-56">
+        <DropdownMenuRadioGroup value={value} onValueChange={(v) => onChange(v as NftSort)}>
+          {(Object.keys(SORT_LABELS) as NftSort[]).map((key) => (
+            <DropdownMenuRadioItem key={key} value={key}>
+              {SORT_LABELS[key]}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
   )
 }
