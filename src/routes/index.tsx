@@ -1,25 +1,20 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { useQuery } from '@tanstack/react-query'
-import { api } from '@/lib/api'
-import { Button } from '@/components/ui/button'
+import { CatalogProducts } from '@/features/catalog/components/catalog-products'
+import { HomeBlog } from '@/features/home/home-blog'
+import { HomeHero } from '@/features/home/home-hero'
+import { HomePromos } from '@/features/home/home-promos'
 
 export const Route = createFileRoute('/')({
   component: HomePage,
 })
 
 function HomePage() {
-  const health = useQuery({
-    queryKey: ['health'],
-    queryFn: () => api.get<{ status: string }>('/health').then((r) => r.data),
-  })
-
   return (
-    <main className="mx-auto flex min-h-dvh max-w-5xl flex-col items-center justify-center gap-4 p-4">
-      <h1 className="text-3xl font-semibold">NFT Marketplace</h1>
-      <p data-testid="api-status" className="text-muted-foreground">
-        API mock: {health.isPending ? 'carregando…' : (health.data?.status ?? 'erro')}
-      </p>
-      <Button>Setup ok</Button>
-    </main>
+    <div className="flex flex-col gap-16 pb-16 lg:gap-24 lg:pb-24">
+      <HomeHero />
+      <CatalogProducts />
+      <HomePromos />
+      <HomeBlog />
+    </div>
   )
 }
