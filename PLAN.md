@@ -34,15 +34,17 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
   - [x] Logout/troca de usuário limpa o cache privado do Query (e o MutationCache) e chama `socket.disconnect()` (o socket só conecta na fase 4)
   - [x] Senhas nunca em claro: hash com salt no mock, nada no localStorage, mutations de auth com `gcTime: 0`
   - [x] Rota 404
-- [ ] **3. Início + Detalhe**: busca, filtros, ordenação e paginação na URL, skeletons, detalhe com edições e quantidade, favoritos otimistas com rollback
+- [x] **3. Início + Detalhe**: busca, filtros, ordenação e paginação na URL, skeletons, detalhe com edições e quantidade, favoritos otimistas com rollback
   - [x] Layout da Início (hero, produtos com dados do mock, sidebar, promos, blog) e do Detalhe (galeria, edições, quantidade, descrição, mais da coleção), conferido em 390/768/1440
-  - [ ] Abas, ordenação, filtros, faixa de preço e paginação estão só visuais: ligar à URL
-  - [ ] Busca (ícone do header) e favoritos (botão hoje mostra aviso)
-  - [ ] Barra de navegação inferior do mobile (frame Mobile / Início) e filtros em drawer no mobile
-  - [ ] Cancelar/descartar respostas obsoletas (AbortSignal via Axios + Query)
-  - [ ] Mudança de filtro volta para a página 1
+  - [x] Abas (atalhos de ordenação), ordenação, categorias, faixa de preço e paginação na URL (`src/features/catalog/search.ts`)
+  - [x] Busca no header (desktop) e "Explorar coleções" (mobile) com `?q=` e debounce
+  - [x] Favoritos otimistas com rollback e cache por usuário (detalhe e cards do mobile)
+  - [ ] Filtro por rede e lista de favoritos: fora do escopo por ora (avisam em vez de simular)
+  - [x] Mobile: tab bar, topo com busca e filtros em drawer, cards escalonados, detalhe com barra de compra
+  - [x] Cancelar/descartar respostas obsoletas (AbortSignal via Axios + Query)
+  - [x] Mudança de filtro volta para a página 1
   - [x] Detalhe: NFT inexistente, edição indisponível, limite de quantidade
-  - [ ] Skeletons com shimmer, sem layout shift, respeitando `prefers-reduced-motion`
+  - [x] Skeletons com shimmer, sem layout shift, respeitando `prefers-reduced-motion`
 
 ## Dia 2: compra, tempo real e entrega
 - [ ] **4. Carrinho + Socket**: carrinho no servidor, merge do carrinho do visitante ao logar, cupom, cotação, `nft.updated` com versão e deduplicação
