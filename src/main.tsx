@@ -4,6 +4,8 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { RouterProvider } from '@tanstack/react-router'
 import { queryClient } from '@/lib/query-client'
 import { router } from '@/lib/router'
+import { revalidateSession } from '@/features/auth/api'
+import { installSessionEffects } from '@/features/auth/session-effects'
 import './index.css'
 
 // O mock (MSW) é o backend da aplicação, inclusive em produção.
@@ -19,6 +21,9 @@ async function enableMocking() {
 }
 
 enableMocking().then(() => {
+  installSessionEffects(router)
+  void revalidateSession()
+
   createRoot(document.getElementById('root')!).render(
     <StrictMode>
       <QueryClientProvider client={queryClient}>

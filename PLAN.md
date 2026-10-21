@@ -25,11 +25,15 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
   - [x] Valores ETH como string decimal (`src/lib/eth.ts`)
 - [ ] **2. Layout + Auth**: tokens do Figma, header e footer, login, cadastro, sessão, logout, rotas protegidas com redirect
   - [x] Tokens do Figma (cores, Roboto Mono) em `src/index.css`; header (ativo por rota, divisória só fora do Mercado) e footer
-  - [ ] Login e cadastro (modais desktop, telas mobile), sessão, logout, rotas protegidas
-  - [ ] Expiração de sessão na navegação e no checkout, preservando o contexto para retomada
-  - [ ] Logout/troca de usuário limpa o cache privado do Query e desconecta o socket
-  - [ ] Senhas nunca em claro (nem no mock)
-  - [ ] Rota 404
+  - [x] Login e cadastro (`/entrar`, `/criar-conta`: modal sobre a Início no desktop, tela cheia no mobile), validação local + erros da API por campo
+  - [x] Sessão em `src/lib/session.ts` (token + validade, sincronizada entre abas), revalidada no boot; 401 encerra via interceptor do Axios
+  - [x] Logout pelo menu do usuário no header; rota protegida `_authed` com `?redirect=` (placeholder `/perfil` até a fase 6)
+  - [ ] Google, Facebook e "Esqueceu a senha?" só avisam que não estão disponíveis
+  - [x] Expiração de sessão na navegação: aviso + volta ao login com `?redirect=` e retomada após entrar
+  - [ ] Expiração no checkout preservando o formulário (fase 5)
+  - [x] Logout/troca de usuário limpa o cache privado do Query (e o MutationCache) e chama `socket.disconnect()` (o socket só conecta na fase 4)
+  - [x] Senhas nunca em claro: hash com salt no mock, nada no localStorage, mutations de auth com `gcTime: 0`
+  - [x] Rota 404
 - [ ] **3. Início + Detalhe**: busca, filtros, ordenação e paginação na URL, skeletons, detalhe com edições e quantidade, favoritos otimistas com rollback
   - [x] Layout da Início (hero, produtos com dados do mock, sidebar, promos, blog) e do Detalhe (galeria, edições, quantidade, descrição, mais da coleção), conferido em 390/768/1440
   - [ ] Abas, ordenação, filtros, faixa de preço e paginação estão só visuais: ligar à URL
@@ -43,6 +47,7 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
 ## Dia 2: compra, tempo real e entrega
 - [ ] **4. Carrinho + Socket**: carrinho no servidor, merge do carrinho do visitante ao logar, cupom, cotação, `nft.updated` com versão e deduplicação
   - [ ] Carrinho do visitante sobrevive ao refresh (local ou guest id)
+  - [ ] Atenção: no login, `startSession` chama `clearPrivateState()` antes de salvar a sessão; ler o carrinho do visitante antes disso para o merge
   - [ ] Eventos com id estável, recurso e versão; ignorar duplicatas e eventos antigos
   - [ ] Reconciliar com a REST após reconexão
   - [ ] Eventos de sessão anterior não afetam outro usuário; liberar listeners ao fim do ciclo de vida

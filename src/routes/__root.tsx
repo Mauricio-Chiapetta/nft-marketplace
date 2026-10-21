@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { Toaster } from '@/components/ui/sonner'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
+import { NotFound } from '@/components/layout/not-found'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -12,6 +13,7 @@ interface RouterContext {
 
 export const Route = createRootRouteWithContext<RouterContext>()({
   component: RootLayout,
+  notFoundComponent: NotFound,
 })
 
 function RootLayout() {
@@ -24,7 +26,7 @@ function RootLayout() {
         </main>
         <SiteFooter />
       </div>
-      <Toaster />
+      <Toaster theme="dark" position="top-center" />
       {import.meta.env.DEV && (
         <>
           <TanStackRouterDevtools position="bottom-left" />

@@ -4,6 +4,9 @@ import searchIcon from '@/assets/icons/search.svg'
 import cartIcon from '@/assets/icons/cart.svg'
 import badgeIcon from '@/assets/icons/badge.svg'
 import logoutIcon from '@/assets/icons/logout.svg'
+import { safeRedirect } from '@/features/auth/redirect'
+import { useSession } from '@/lib/session'
+import { UserMenu } from './user-menu'
 
 // Itens sem tela no escopo ficam visíveis (como no Figma), mas desabilitados.
 // Mercado fica ativo no fluxo de compra (detalhe, carrinho, pagamento).
@@ -17,7 +20,8 @@ const NAV = [
 const MARKET_PATHS = ['/nfts', '/cart', '/checkout']
 
 export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
-  const pathname = useRouterState({ select: (s) => s.location.pathname })
+  const { pathname, href } = useRouterState({ select: (s) => s.location })
+  const session = useSession()
   const section = MARKET_PATHS.some((p) => pathname.startsWith(p)) ? 'market' : 'home'
   // O Figma omite a divisória nas telas do Mercado.
   const divider = section === 'home'
@@ -76,13 +80,18 @@ export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
               </span>
             )}
           </button>
-          <button
-            type="button"
-            className="flex h-[35px] w-[100px] items-center justify-center gap-1 rounded-md bg-primary text-base font-medium text-ink transition-colors hover:bg-text-accent"
-          >
-            <img src={logoutIcon} alt="" width={17.78} height={16.92} className="m-[2px]" />
-            Entrar
-          </button>
+          {session ? (
+            <UserMenu name={session.user.name} />
+          ) : (
+            <Link
+              to="/entrar"
+              search={{ redirect: safeRedirect(href) }}
+              className="flex h-[35px] w-[100px] items-center justify-center gap-1 rounded-md bg-primary text-base font-medium text-ink transition-colors hover:bg-text-accent"
+            >
+              <img src={logoutIcon} alt="" width={17.78} height={16.92} className="m-[2px]" />
+              Entrar
+            </Link>
+          )}
         </div>
       </div>
     </header>
