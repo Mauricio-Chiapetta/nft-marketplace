@@ -9,7 +9,8 @@ import './index.css'
 // O mock (MSW) é o backend da aplicação, inclusive em produção.
 // Nada renderiza antes do service worker estar pronto para interceptar.
 async function enableMocking() {
-  const { worker } = await import('@/mocks/browser')
+  const { worker, bootMockServer } = await import('@/mocks/browser')
+  bootMockServer()
   await worker.start({
     serviceWorker: { url: '/mockServiceWorker.js' },
     onUnhandledRequest: 'bypass',

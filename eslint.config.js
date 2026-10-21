@@ -18,6 +18,13 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+      // Prefixo "_" marca descarte intencional (ex.: omitir campos internos em DTOs).
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        { argsIgnorePattern: '^_', varsIgnorePattern: '^_', destructuredArrayIgnorePattern: '^_' },
+      ],
+    },
   },
   {
     // Arquivos de rota do TanStack exportam 'Route' junto do componente.
