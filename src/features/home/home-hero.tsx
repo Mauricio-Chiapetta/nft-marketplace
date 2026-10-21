@@ -2,12 +2,12 @@ import heroDots from '@/assets/icons/hero-dots.svg'
 
 export function HomeHero() {
   return (
-    <section className="flex flex-col-reverse items-center gap-10 py-6 md:flex-row md:justify-between md:py-0 md:pl-10 lg:h-[450px]">
+    <section className="hidden flex-col-reverse items-center gap-10 py-6 md:flex md:flex-row md:justify-between md:py-0 md:pl-10 lg:h-[450px]">
       <div className="flex w-full flex-col gap-8 md:max-w-[600px] md:gap-11">
         <div className="flex flex-col gap-8">
           <div className="flex flex-col gap-1">
             <p className="text-sm font-medium leading-4 tracking-[1.4px] text-foreground">Bem-vindo à Kurio</p>
-            <h1 className="mt-2 text-[28px] font-bold leading-[44px] text-foreground sm:text-[43px] sm:leading-[70px]">
+            <h1 className="mt-2 text-[32px] font-bold leading-[52px] text-foreground lg:text-[43px] lg:leading-[70px]">
               SEJA DONO DO FUTURO
               <br />
               DA ARTE DIGITAL

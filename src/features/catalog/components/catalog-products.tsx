@@ -1,5 +1,6 @@
 import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { cn } from 'cn'
+import { SlidersHorizontal } from 'lucide-react'
 import arrowDown from '@/assets/icons/arrow-down.svg'
 import {
   DropdownMenu,
@@ -14,6 +15,7 @@ import { PAGE_SIZE, SORT_LABELS, VIEW_SORT, effectiveSort, toListParams, type Ca
 import { useCatalogSearch } from '../use-catalog-search'
 import { CatalogPagination } from './catalog-pagination'
 import { CatalogSidebar } from './catalog-sidebar'
+import { FiltersDrawer } from './filters-drawer'
 import { NftCard, NftCardSkeleton } from './nft-card'
 
 const TABS: { view: CatalogView; label: string }[] = [
@@ -29,12 +31,10 @@ export function CatalogProducts() {
   const page = search.page ?? 1
 
   return (
-    <section id="produtos" className="flex scroll-mt-6 flex-col gap-12 lg:flex-row">
-      <div className="order-2 lg:order-1">
-        <CatalogSidebar />
-      </div>
+    <section id="produtos" className="flex scroll-mt-6 flex-col gap-12 md:mt-0 lg:flex-row">
+      <CatalogSidebar />
 
-      <div className="order-1 flex min-w-0 flex-1 flex-col items-end gap-[88px] lg:order-2">
+      <div className="flex min-w-0 flex-1 flex-col items-end gap-12 lg:gap-[88px]">
         <div className="flex w-full flex-col gap-8">
           <div className="flex flex-wrap items-center justify-between gap-4">
             <div role="tablist" aria-label="Visualização" className="-mx-1 flex max-w-full gap-5 overflow-x-auto px-1 text-sm font-medium leading-4 sm:text-[15px]">
@@ -59,12 +59,22 @@ export function CatalogProducts() {
                 )
               })}
             </div>
-            <SortMenu
+            <div className="flex items-center gap-4">
+              <FiltersDrawer
+                trigger={
+                  <button type="button" className="hidden h-9 items-center gap-2 rounded-md border border-border px-3 text-sm text-foreground hover:border-primary md:flex lg:hidden">
+                    <SlidersHorizontal className="size-4" aria-hidden />
+                    Filtros
+                  </button>
+                }
+              />
+              <SortMenu
               value={sort}
               // Nas abas de atalho a ordenação é fixa.
               locked={Boolean(search.view && VIEW_SORT[search.view])}
               onChange={(value) => setFilter({ sort: value })}
-            />
+              />
+            </div>
           </div>
 
           {search.q && (

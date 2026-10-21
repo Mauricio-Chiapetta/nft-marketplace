@@ -9,14 +9,14 @@ import { PriceRange } from './price-range'
 
 export function CatalogSidebar() {
   return (
-    <aside className="flex w-full flex-col gap-6 lg:w-[310px] lg:shrink-0">
+    <aside className="hidden w-[310px] shrink-0 flex-col gap-6 lg:flex">
       <CatalogFilters />
       <FeaturedBanner />
     </aside>
   )
 }
 
-function CatalogFilters() {
+export function CatalogFilters() {
   const facets = useQuery(facetsQuery())
   const { search, setFilter } = useCatalogSearch()
   const selected = parseCategories(search.category)

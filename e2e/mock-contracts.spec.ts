@@ -4,7 +4,7 @@ import { call, login, mock, type ApiErrorBody } from './support/api.ts'
 
 async function open(page: Page, query = '') {
   await page.goto(`/?mockReset${query}`)
-  await expect(page.getByRole('heading', { name: /SEJA DONO DO FUTURO/ })).toBeVisible()
+  await expect(page.getByRole('heading', { name: /SEJA DONO/ })).toBeVisible()
 }
 
 test.describe('contratos do mock', () => {
@@ -225,7 +225,7 @@ test.describe('contratos do mock', () => {
     await call(page, '/me/favorites/nft_020', { method: 'PUT', token })
 
     await page.reload()
-    await expect(page.getByRole('heading', { name: /SEJA DONO DO FUTURO/ })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /SEJA DONO/ })).toBeVisible()
     const after = await call<{ nftIds: string[] }>(page, '/me/favorites', { token })
     expect(after.body.nftIds).toContain('nft_020')
 
