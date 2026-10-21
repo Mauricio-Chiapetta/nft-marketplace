@@ -6,6 +6,7 @@ import { Toaster } from '@/components/ui/sonner'
 import { SiteHeader } from '@/components/layout/site-header'
 import { SiteFooter } from '@/components/layout/site-footer'
 import { NotFound } from '@/components/layout/not-found'
+import { MobileTabBar } from '@/components/layout/mobile-tab-bar'
 
 interface RouterContext {
   queryClient: QueryClient
@@ -19,13 +20,14 @@ export const Route = createRootRouteWithContext<RouterContext>()({
 function RootLayout() {
   return (
     <>
-      <div className="mx-auto flex min-h-dvh w-full max-w-[1248px] flex-col gap-8 px-4 pt-6 pb-6 md:px-6">
+      <div className="mx-auto flex min-h-dvh w-full max-w-[1248px] flex-col gap-4 px-6 pt-10 pb-[134px] md:gap-8 md:pt-6 md:pb-6">
         <SiteHeader />
         <main className="flex-1">
           <Outlet />
         </main>
         <SiteFooter />
       </div>
+      <MobileTabBar />
       <Toaster theme="dark" position="top-center" />
       {import.meta.env.DEV && (
         <>

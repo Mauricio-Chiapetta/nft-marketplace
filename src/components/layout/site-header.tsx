@@ -27,7 +27,8 @@ export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
   const divider = section === 'home'
 
   return (
-    <header className={cn('w-full', divider && 'border-b-[0.3px] border-primary')}>
+    // No mobile o Figma troca o header pela barra inferior (MobileTabBar).
+    <header className={cn('hidden w-full md:block', divider && 'border-b-[0.3px] border-primary')}>
       <div className="relative flex items-start justify-between gap-6">
         <Link to="/" className="pt-2 text-sm font-bold tracking-[1.4px] text-foreground md:w-40">
           KURIO
