@@ -10,13 +10,17 @@ import {
 } from '@/components/ui/dropdown-menu'
 import type { NftSort } from '@/types/api'
 import { nftListQuery } from '../queries'
-import { PAGE_SIZE, SORT_LABELS, effectiveSort, toListParams } from '../search'
+import { PAGE_SIZE, SORT_LABELS, VIEW_SORT, effectiveSort, toListParams, type CatalogView } from '../search'
 import { useCatalogSearch } from '../use-catalog-search'
 import { CatalogPagination } from './catalog-pagination'
 import { CatalogSidebar } from './catalog-sidebar'
 import { NftCard, NftCardSkeleton } from './nft-card'
 
-const TABS = ['Todos os NFTs', 'Novos lançamentos', 'Em alta']
+const TABS: { view: CatalogView; label: string }[] = [
+  { view: 'all', label: 'Todos os NFTs' },
+  { view: 'new', label: 'Novos lançamentos' },
+  { view: 'trending', label: 'Em alta' },
+]
 
 export function CatalogProducts() {
   const { search, setFilter, setPage, reset } = useCatalogSearch()
@@ -33,25 +37,34 @@ export function CatalogProducts() {
       <div className="order-1 flex min-w-0 flex-1 flex-col items-end gap-[88px] lg:order-2">
         <div className="flex w-full flex-col gap-8">
           <div className="flex flex-wrap items-center justify-between gap-4">
-            <div role="tablist" aria-label="Visualização" className="-mx-1 flex max-w-full gap-5 overflow-x-auto px-1 pb-2 text-sm font-medium leading-4 sm:text-[15px]">
-              {TABS.map((tab, i) => (
-                <button
-                  key={tab}
-                  type="button"
-                  role="tab"
-                  aria-selected={i === 0}
-                  className={cn(
-                    'relative whitespace-nowrap',
-                    i === 0
-                      ? 'text-text-accent after:absolute after:top-[23px] after:left-0 after:h-0.5 after:w-[101px] after:bg-primary'
-                      : 'text-foreground',
-                  )}
-                >
-                  {tab}
-                </button>
-              ))}
+            <div role="tablist" aria-label="Visualização" className="-mx-1 flex max-w-full gap-5 overflow-x-auto px-1 text-sm font-medium leading-4 sm:text-[15px]">
+              {TABS.map((tab) => {
+                const selected = (search.view ?? 'all') === tab.view
+                return (
+                  <button
+                    key={tab.view}
+                    type="button"
+                    role="tab"
+                    aria-selected={selected}
+                    onClick={() => setFilter({ view: tab.view })}
+                    className={cn(
+                      'relative pb-2 whitespace-nowrap',
+                      selected
+                        ? 'text-text-accent after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-full after:bg-primary'
+                        : 'text-foreground hover:text-text-accent',
+                    )}
+                  >
+                    {tab.label}
+                  </button>
+                )
+              })}
             </div>
-            <SortMenu value={sort} onChange={(value) => setFilter({ sort: value })} />
+            <SortMenu
+              value={sort}
+              // Nas abas de atalho a ordenação é fixa.
+              locked={Boolean(search.view && VIEW_SORT[search.view])}
+              onChange={(value) => setFilter({ sort: value })}
+            />
           </div>
 
           <p className="sr-only" aria-live="polite">
@@ -95,10 +108,14 @@ export function CatalogProducts() {
   )
 }
 
-function SortMenu({ value, onChange }: { value: NftSort; onChange: (value: NftSort) => void }) {
+function SortMenu({ value, locked, onChange }: { value: NftSort; locked: boolean; onChange: (value: NftSort) => void }) {
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className="flex items-center gap-2 rounded-sm text-[15px] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring">
+      <DropdownMenuTrigger
+        disabled={locked}
+        title={locked ? 'Ordenação definida pela aba' : undefined}
+        className="flex items-center gap-2 rounded-sm text-[15px] text-foreground outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-default disabled:opacity-60"
+      >
         Ordenar por: <span>{SORT_LABELS[value]}</span>
         <img src={arrowDown} alt="" width={10.83} height={6.17} />
       </DropdownMenuTrigger>

@@ -1,11 +1,12 @@
 import { useQuery } from '@tanstack/react-query'
 import { cn } from 'cn'
-import sliderThumb from '@/assets/icons/slider-thumb.svg'
 import { Skeleton } from '@/components/ui/skeleton'
-import { formatEth } from '@/lib/eth'
+import type { NftCategory } from '@/types/api'
 import { facetsQuery } from '../queries'
+import { parseCategories } from '../search'
+import { useCatalogSearch } from '../use-catalog-search'
+import { PriceRange } from './price-range'
 
-// Filtros: layout do Figma. A interação (URL, aplicar faixa) entra na fase 3.
 export function CatalogSidebar() {
   return (
     <aside className="flex w-full flex-col gap-6 lg:w-[310px] lg:shrink-0">
@@ -17,11 +18,30 @@ export function CatalogSidebar() {
 
 function CatalogFilters() {
   const facets = useQuery(facetsQuery())
+  const { search, setFilter } = useCatalogSearch()
+  const selected = parseCategories(search.category)
+  const hasFilters = selected.length > 0 || search.min || search.max
+
+  function toggle(category: NftCategory) {
+    const next = selected.includes(category) ? selected.filter((c) => c !== category) : [...selected, category]
+    setFilter({ category: next.join(',') || undefined })
+  }
 
   return (
     <div className="flex flex-col gap-10 bg-surface-card p-5">
-      <section className="flex flex-col gap-3">
-        <h2 className="text-lg font-bold leading-4 text-foreground">Coleções</h2>
+      <fieldset className="flex flex-col gap-3">
+        <legend className="mb-3 flex w-full items-baseline justify-between text-lg font-bold leading-4 text-foreground">
+          Coleções
+          {hasFilters && (
+            <button
+              type="button"
+              onClick={() => setFilter({ category: undefined, min: undefined, max: undefined })}
+              className="text-sm font-normal text-text-accent underline-offset-4 hover:underline"
+            >
+              Limpar filtros
+            </button>
+          )}
+        </legend>
         <ul className="px-3 text-[15px] leading-10">
           {facets.isPending
             ? Array.from({ length: 6 }, (_, i) => (
@@ -29,47 +49,55 @@ function CatalogFilters() {
                   <Skeleton className="h-3.5 w-full bg-surface-dark" />
                 </li>
               ))
-            : facets.data?.categories.map((c, i) => (
-                <li
-                  key={c.value}
-                  className={cn('flex justify-between', i === 0 ? 'text-text-accent' : 'text-text-secondary')}
-                >
-                  <span>{c.label}</span>
-                  <span className="font-bold">({c.count})</span>
-                </li>
-              ))}
+            : facets.data?.categories.map((c) => {
+                const checked = selected.includes(c.value)
+                return (
+                  <li key={c.value}>
+                    <label
+                      className={cn(
+                        'flex cursor-pointer justify-between hover:text-text-accent',
+                        checked ? 'text-text-accent' : 'text-text-secondary',
+                      )}
+                    >
+                      <span className="flex items-center gap-2">
+                        <input
+                          type="checkbox"
+                          checked={checked}
+                          onChange={() => toggle(c.value)}
+                          className="size-3.5 accent-primary"
+                        />
+                        {c.label}
+                      </span>
+                      <span className="font-bold">({c.count})</span>
+                    </label>
+                  </li>
+                )
+              })}
         </ul>
-      </section>
+      </fieldset>
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-bold leading-4 text-foreground">Faixa de preço</h2>
-        <div className="flex flex-col gap-3 pl-3">
-          <div className="relative flex h-[15px] items-center" aria-hidden>
-            <span className="absolute inset-x-0 h-1 rounded-full bg-primary" />
-            <img src={sliderThumb} alt="" width={21} height={21} className="relative -ml-[3px]" />
-            <img src={sliderThumb} alt="" width={21} height={21} className="relative ml-[155px]" />
-          </div>
-          <p className="text-[15px] text-foreground">
-            Preço:{' '}
-            {facets.data
-              ? `${formatEth(facets.data.priceRange.min).replace(' ETH', '')} - ${formatEth(facets.data.priceRange.max)}`
-              : '…'}
-          </p>
-          <button
-            type="button"
-            className="self-start rounded-md bg-primary px-3 py-2 text-base font-bold leading-5 text-ink"
-          >
-            Aplicar
-          </button>
-        </div>
+        {facets.data ? (
+          <PriceRange
+            key={`${search.min}-${search.max}`}
+            bounds={facets.data.priceRange}
+            min={search.min}
+            max={search.max}
+            onApply={(range) => setFilter(range)}
+          />
+        ) : (
+          <Skeleton className="ml-3 h-20 bg-surface-dark" />
+        )}
       </section>
 
       <section className="flex flex-col gap-3">
         <h2 className="text-lg font-bold leading-4 text-foreground">Rede</h2>
-        <ul className="pl-3 text-[15px] leading-10 text-text-secondary">
+        {/* O catálogo do mock é todo na Ethereum; filtro por rede fica fora do escopo. */}
+        <ul className="pl-3 text-[15px] leading-10 text-text-secondary" aria-disabled="true" title="Em breve">
           <li>Ethereum</li>
-          <li>Polygon</li>
-          <li>Arbitrum</li>
+          <li className="opacity-60">Polygon</li>
+          <li className="opacity-60">Arbitrum</li>
         </ul>
       </section>
     </div>
