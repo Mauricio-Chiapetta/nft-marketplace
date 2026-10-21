@@ -1,11 +1,11 @@
 import { Link, useRouterState } from '@tanstack/react-router'
 import { cn } from 'cn'
-import searchIcon from '@/assets/icons/search.svg'
 import cartIcon from '@/assets/icons/cart.svg'
 import badgeIcon from '@/assets/icons/badge.svg'
 import logoutIcon from '@/assets/icons/logout.svg'
 import { safeRedirect } from '@/features/auth/redirect'
 import { useSession } from '@/lib/session'
+import { HeaderSearch } from './header-search'
 import { UserMenu } from './user-menu'
 
 // Itens sem tela no escopo ficam visíveis (como no Figma), mas desabilitados.
@@ -28,7 +28,7 @@ export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
 
   return (
     <header className={cn('w-full', divider && 'border-b-[0.3px] border-primary')}>
-      <div className="flex items-start justify-between gap-6">
+      <div className="relative flex items-start justify-between gap-6">
         <Link to="/" className="pt-2 text-sm font-bold tracking-[1.4px] text-foreground md:w-40">
           KURIO
         </Link>
@@ -64,9 +64,7 @@ export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
         </nav>
 
         <div className="flex items-center gap-7">
-          <button type="button" aria-label="Buscar" className="grid size-6 place-items-center">
-            <img src={searchIcon} alt="" width={20} height={20} />
-          </button>
+          <HeaderSearch />
           <button
             type="button"
             aria-label={`Carrinho, ${cartCount} ${cartCount === 1 ? 'item' : 'itens'}`}

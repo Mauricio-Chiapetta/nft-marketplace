@@ -67,6 +67,15 @@ export function CatalogProducts() {
             />
           </div>
 
+          {search.q && (
+            <p className="-mt-4 flex flex-wrap items-center gap-2 text-sm text-text-secondary">
+              Resultados para <span className="font-bold text-foreground">“{search.q}”</span>
+              <button type="button" onClick={() => setFilter({ q: undefined })} className="text-text-accent underline-offset-4 hover:underline">
+                Limpar busca
+              </button>
+            </p>
+          )}
+
           <p className="sr-only" aria-live="polite">
             {list.data ? `${list.data.total} NFTs encontrados, página ${list.data.page} de ${Math.max(list.data.totalPages, 1)}.` : ''}
           </p>
