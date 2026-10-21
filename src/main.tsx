@@ -16,7 +16,8 @@ async function enableMocking() {
   await worker.start({
     serviceWorker: { url: '/mockServiceWorker.js' },
     onUnhandledRequest: 'bypass',
-    quiet: import.meta.env.PROD,
+    // O log do MSW imprime corpos de request (inclusive senhas); só com ?mockLog em dev.
+    quiet: import.meta.env.PROD || !new URLSearchParams(window.location.search).has('mockLog'),
   })
 }
 

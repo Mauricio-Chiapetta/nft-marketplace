@@ -11,6 +11,7 @@ import shareEmail from '@/assets/icons/share-email.svg'
 import shareTwitter from '@/assets/icons/share-twitter.svg'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatEth } from '@/lib/eth'
+import { FavoriteButton } from '@/features/favorites/favorite-button'
 import type { Nft } from '@/types/api'
 
 export function NftDetail({ nft }: { nft: Nft }) {
@@ -161,14 +162,7 @@ export function NftDetail({ nft }: { nft: Nft }) {
               >
                 {soldOut ? 'ESGOTADO' : 'COMPRAR'}
               </button>
-              <button
-                type="button"
-                onClick={() => toast.info('Favoritos ainda não estão disponíveis.')}
-                className="flex h-10 w-[130px] items-center justify-center gap-2 rounded-md border border-primary text-sm font-medium leading-5 text-text-accent transition-colors hover:bg-primary/10"
-              >
-                <img src={heartIcon} alt="" width={20} height={20} />
-                Favoritar
-              </button>
+              <FavoriteButton nftId={nft.id} />
             </div>
           </div>
           {!soldOut && maxQuantity > 1 && (
