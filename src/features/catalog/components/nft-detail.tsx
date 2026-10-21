@@ -13,6 +13,7 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { formatEth } from '@/lib/eth'
 import { FavoriteButton } from '@/features/favorites/favorite-button'
 import type { Nft } from '@/types/api'
+import { MobileNftDetail, type PurchaseState } from './nft-detail-mobile'
 
 export function NftDetail({ nft }: { nft: Nft }) {
   const [imageIndex, setImageIndex] = useState(0)
@@ -23,15 +24,40 @@ export function NftDetail({ nft }: { nft: Nft }) {
   const edition = nft.editions.find((e) => e.id === editionId) ?? firstAvailable
   const maxQuantity = Math.min(edition.available, edition.maxPerOrder)
   const soldOut = edition.available === 0
-  const image = nft.images[imageIndex]
-
   function selectEdition(id: string) {
     setEditionId(id)
     setQuantity(1)
   }
 
+  // O carrinho entra na fase 4; até lá o botão não simula sucesso.
+  const onBuy = () => toast.info('O carrinho ainda não está disponível.')
+
+  const state: PurchaseState = {
+    imageIndex,
+    setImageIndex,
+    edition,
+    selectEdition,
+    quantity,
+    setQuantity,
+    maxQuantity,
+    soldOut,
+    onBuy,
+  }
+
   return (
-    <div className="flex flex-col gap-3">
+    <>
+      <MobileNftDetail nft={nft} state={state} />
+      <DesktopNftDetail nft={nft} state={state} />
+    </>
+  )
+}
+
+function DesktopNftDetail({ nft, state }: { nft: Nft; state: PurchaseState }) {
+  const { imageIndex, setImageIndex, edition, selectEdition, quantity, setQuantity, maxQuantity, soldOut, onBuy } = state
+  const image = nft.images[imageIndex]
+
+  return (
+    <div className="hidden flex-col gap-3 md:flex">
       <nav aria-label="Trilha" className="text-[15px] font-bold leading-4 text-foreground">
         <Link to="/" className="hover:text-text-accent">
           Início
@@ -156,8 +182,7 @@ export function NftDetail({ nft }: { nft: Nft }) {
               <button
                 type="button"
                 disabled={soldOut}
-                // O carrinho entra na fase 4; até lá o botão não simula sucesso.
-                onClick={() => toast.info('O carrinho ainda não está disponível.')}
+                onClick={onBuy}
                 className="h-10 w-[130px] rounded-md bg-primary text-sm font-bold leading-5 text-ink transition-colors hover:bg-text-accent disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {soldOut ? 'ESGOTADO' : 'COMPRAR'}

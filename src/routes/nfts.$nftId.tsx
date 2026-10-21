@@ -44,7 +44,7 @@ function NftDetailPage() {
   }
 
   return (
-    <div className="flex flex-col gap-16 pb-16 lg:gap-24 lg:pb-24">
+    <div className="flex flex-col gap-16 pb-16 max-md:pb-12 lg:gap-24 lg:pb-24">
       <NftDetail key={nft.data.id} nft={nft.data} />
       <NftDescription nft={nft.data} />
       <RelatedNfts nft={nft.data} />
