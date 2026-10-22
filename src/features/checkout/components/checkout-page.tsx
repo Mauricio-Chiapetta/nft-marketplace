@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { flushSync } from 'react-dom'
 import { Link } from '@tanstack/react-router'
 import { cn } from 'cn'
 import radioOff from '@/assets/icons/radio-off.svg'
@@ -112,7 +113,8 @@ export function CheckoutPage({ session }: { session: Session }) {
   async function onReview(e?: FormEvent) {
     e?.preventDefault()
     const found = validate(draft, walletId)
-    setErrors(found)
+    // Renderiza os erros antes de procurar o primeiro campo inválido.
+    flushSync(() => setErrors(found))
     if (Object.keys(found).length) {
       document.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus()
       return

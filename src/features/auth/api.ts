@@ -14,7 +14,10 @@ async function startSession(session: Session) {
   // O carrinho do visitante fica no servidor (guest id): o merge não depende do cache.
   const merged = await mergeGuestCart()
   if (!merged) return
-  queryClient.setQueryData(cartKeys.cart(cartOwner(session.user.id)), merged.cart)
+  // Um GET /cart disparado pela nova sessão antes do merge não pode sobrescrevê-lo.
+  const key = cartKeys.cart(cartOwner(session.user.id))
+  await queryClient.cancelQueries({ queryKey: key })
+  queryClient.setQueryData(key, merged.cart)
   if (merged.adjustments.length) {
     toast.warning('Algumas quantidades do seu carrinho foram ajustadas ao limite ou ao estoque disponível.')
   }
