@@ -2,12 +2,22 @@ import { useMutation } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { sessionStore } from '@/lib/session'
 import type { LoginInput, RegisterInput, Session } from '@/types/api'
+import { toast } from 'sonner'
+import { queryClient } from '@/lib/query-client'
+import { cartKeys, cartOwner, mergeGuestCart } from '@/features/cart/api'
 import { clearPrivateState } from './private-state'
 
-function startSession(session: Session) {
+async function startSession(session: Session) {
   // Nada do usuário anterior (ou do visitante) pode vazar para o novo.
   clearPrivateState()
   sessionStore.set(session)
+  // O carrinho do visitante fica no servidor (guest id): o merge não depende do cache.
+  const merged = await mergeGuestCart()
+  if (!merged) return
+  queryClient.setQueryData(cartKeys.cart(cartOwner(session.user.id)), merged.cart)
+  if (merged.adjustments.length) {
+    toast.warning('Algumas quantidades do seu carrinho foram ajustadas ao limite ou ao estoque disponível.')
+  }
 }
 
 export function useLogin() {

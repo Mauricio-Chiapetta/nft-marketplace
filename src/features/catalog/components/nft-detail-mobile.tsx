@@ -1,7 +1,6 @@
 import { useRouter } from '@tanstack/react-router'
 import { cn } from 'cn'
 import { Heart } from 'lucide-react'
-import { toast } from 'sonner'
 import arrowLeft from '@/assets/icons/mobile/arrow-left.svg'
 import minusIcon from '@/assets/icons/mobile/minus-sm.svg'
 import plusIcon from '@/assets/icons/mobile/plus-sm.svg'
@@ -20,6 +19,8 @@ export interface PurchaseState {
   maxQuantity: number
   soldOut: boolean
   onBuy: () => void
+  onAddToCart: () => void
+  adding: boolean
 }
 
 /** Frame Mobile / Detalhes do NFT: imagem de ponta a ponta, folha de detalhes e barra de compra fixa. */
@@ -159,7 +160,8 @@ export function MobileNftDetail({ nft, state }: { nft: Nft; state: PurchaseState
         <div className="flex gap-3">
           <button
             type="button"
-            disabled={soldOut}
+            disabled={soldOut || state.adding}
+            aria-busy={state.adding}
             onClick={state.onBuy}
             className="h-[60px] flex-1 rounded-[40px] bg-[linear-gradient(100deg,#d28a4c_4%,rgba(210,138,76,0.8)_122%)] text-base/5 font-bold text-ink disabled:opacity-50"
           >
@@ -167,9 +169,10 @@ export function MobileNftDetail({ nft, state }: { nft: Nft; state: PurchaseState
           </button>
           <button
             type="button"
-            aria-label="Carrinho"
-            onClick={() => toast.info('O carrinho ainda não está disponível.')}
-            className="grid size-[60px] place-items-center rounded-[40px] border border-border bg-[#2f1d15]"
+            aria-label="Adicionar ao carrinho"
+            disabled={soldOut || state.adding}
+            onClick={state.onAddToCart}
+            className="grid size-[60px] place-items-center rounded-[40px] border border-border bg-[#2f1d15] disabled:opacity-50"
           >
             <img src={shopIcon} alt="" width={20} height={20} />
           </button>

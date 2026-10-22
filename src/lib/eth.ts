@@ -56,7 +56,7 @@ export function ethMax(...values: string[]): string {
 }
 
 /** Formatação para exibição, com no máximo `maxDecimals` casas (truncadas). */
-export function formatEth(eth: string, maxDecimals = 4): string {
+export function formatEth(eth: string, maxDecimals = 8): string {
   const [whole, fraction = ''] = eth.replace(/^-/, '').split('.')
   const cut = fraction.slice(0, maxDecimals).replace(/0+$/, '')
   return `${eth.startsWith('-') ? '-' : ''}${whole}${cut ? `.${cut}` : ''} ETH`

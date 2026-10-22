@@ -5,6 +5,7 @@ import badgeIcon from '@/assets/icons/badge.svg'
 import logoutIcon from '@/assets/icons/logout.svg'
 import { safeRedirect } from '@/features/auth/redirect'
 import { useSession } from '@/lib/session'
+import { useCart } from '@/features/cart/api'
 import { HeaderSearch } from './header-search'
 import { UserMenu } from './user-menu'
 
@@ -17,11 +18,12 @@ const NAV = [
   { label: 'Aprenda' },
 ] as const
 
-const MARKET_PATHS = ['/nfts', '/cart', '/checkout']
+const MARKET_PATHS = ['/nfts', '/carrinho', '/checkout', '/pedidos']
 
-export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
+export function SiteHeader() {
   const { pathname, href } = useRouterState({ select: (s) => s.location })
   const session = useSession()
+  const cartCount = useCart().data?.itemCount ?? 0
   const section = MARKET_PATHS.some((p) => pathname.startsWith(p)) ? 'market' : 'home'
   // O Figma omite a divisória nas telas do Mercado.
   const divider = section === 'home'
@@ -66,8 +68,8 @@ export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
 
         <div className="flex items-center gap-7">
           <HeaderSearch />
-          <button
-            type="button"
+          <Link
+            to="/carrinho"
             aria-label={`Carrinho, ${cartCount} ${cartCount === 1 ? 'item' : 'itens'}`}
             className="relative h-6 w-[31px]"
           >
@@ -78,7 +80,7 @@ export function SiteHeader({ cartCount = 0 }: { cartCount?: number }) {
                 <span className="relative text-[10px] font-medium leading-none text-ink">{cartCount}</span>
               </span>
             )}
-          </button>
+          </Link>
           {session ? (
             <UserMenu name={session.user.name} />
           ) : (

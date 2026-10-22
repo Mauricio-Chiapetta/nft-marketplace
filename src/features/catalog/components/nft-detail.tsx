@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Link } from '@tanstack/react-router'
+import { Link, useNavigate } from '@tanstack/react-router'
 import { cn } from 'cn'
 import { toast } from 'sonner'
 import zoomIcon from '@/assets/icons/zoom.svg'
@@ -11,6 +11,8 @@ import shareEmail from '@/assets/icons/share-email.svg'
 import shareTwitter from '@/assets/icons/share-twitter.svg'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatEth } from '@/lib/eth'
+import { toApiError } from '@/lib/api-error'
+import { useAddToCart } from '@/features/cart/api'
 import { FavoriteButton } from '@/features/favorites/favorite-button'
 import type { Nft } from '@/types/api'
 import { MobileNftDetail, type PurchaseState } from './nft-detail-mobile'
@@ -29,8 +31,30 @@ export function NftDetail({ nft }: { nft: Nft }) {
     setQuantity(1)
   }
 
-  // O carrinho entra na fase 4; até lá o botão não simula sucesso.
-  const onBuy = () => toast.info('O carrinho ainda não está disponível.')
+  const navigate = useNavigate()
+  const addToCart = useAddToCart()
+
+  function add(goToCart: boolean) {
+    if (soldOut || addToCart.isPending) return
+    addToCart.mutate(
+      { nftId: nft.id, editionId: edition.id, quantity },
+      {
+        onSuccess: () => {
+          if (goToCart) {
+            navigate({ to: '/carrinho' })
+            return
+          }
+          toast.success(`${nft.name} (${edition.name}) adicionado ao carrinho.`, {
+            action: { label: 'Ver carrinho', onClick: () => navigate({ to: '/carrinho' }) },
+          })
+        },
+        // Estoque e limite são decididos pela API; a mensagem dela explica o motivo.
+        onError: (error) => toast.error(toApiError(error).message),
+      },
+    )
+  }
+  const onBuy = () => add(true)
+  const onAddToCart = () => add(false)
 
   const state: PurchaseState = {
     imageIndex,
@@ -42,6 +66,8 @@ export function NftDetail({ nft }: { nft: Nft }) {
     maxQuantity,
     soldOut,
     onBuy,
+    onAddToCart,
+    adding: addToCart.isPending,
   }
 
   return (
@@ -53,7 +79,7 @@ export function NftDetail({ nft }: { nft: Nft }) {
 }
 
 function DesktopNftDetail({ nft, state }: { nft: Nft; state: PurchaseState }) {
-  const { imageIndex, setImageIndex, edition, selectEdition, quantity, setQuantity, maxQuantity, soldOut, onBuy } = state
+  const { imageIndex, setImageIndex, edition, selectEdition, quantity, setQuantity, maxQuantity, soldOut, onBuy, adding } = state
   const image = nft.images[imageIndex]
 
   return (
@@ -181,7 +207,8 @@ function DesktopNftDetail({ nft, state }: { nft: Nft; state: PurchaseState }) {
             <div className="flex gap-2">
               <button
                 type="button"
-                disabled={soldOut}
+                disabled={soldOut || adding}
+                aria-busy={adding}
                 onClick={onBuy}
                 className="h-10 w-[130px] rounded-md bg-primary text-sm font-bold leading-5 text-ink transition-colors hover:bg-text-accent disabled:cursor-not-allowed disabled:opacity-50"
               >
