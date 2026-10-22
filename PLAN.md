@@ -76,6 +76,12 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
   - [ ] Script `lighthouse`
   - [ ] No mobile, o hero desktop (com `fetchPriority="high"`) e a imagem do detalhe desktop ficam ocultos mas ainda baixam: trocar por `<picture>`/render condicional para não pesar o LCP
   - [ ] README: setup, variáveis de ambiente, credenciais fictícias, seleção/reset de cenários, como reproduzir as falhas
+  - [ ] Registrar no ARCHITECTURE.md (decisões já tomadas, hoje só no código):
+    - Checkout: campos do Figma sem uso na API omitidos (Nome do perfil, Código de indicação, Nome ENS); "Tipo de carteira" virou o seletor das carteiras cadastradas; provedor (WalletConnect/MetaMask/Coinbase) é só a forma de conexão simulada
+    - Socket no mock: só namespace padrão; o binding não lê o `auth` do handshake (cliente envia o evento `auth` após conectar); o servidor simulado envia os pings do Engine.IO; "sem conexão" = handshake sem resposta (fechar antes do handshake trava o Manager); `socket.io-client` carregado por import dinâmico depois do MSW (engine.io guarda o WebSocket ao carregar)
+    - Abas "Novos lançamentos"/"Em alta" são atalhos de ordenação (recentes/mais favoritados); estrelas de avaliação do Figma viraram contagem de favoritos; rede Solana virou Arbitrum
+    - Cadastro: "Nome de usuário" do Figma grava `name`; `username` é derivado do e-mail
+    - Contas novas ainda não têm carteira (cadastro de carteiras na fase 6): demonstrar a compra com Ana ou Bruno
   - [ ] ARCHITECTURE.md: contratos REST e eventos, política de sessão, estado do carrinho, cache/retry/sincronização, reconciliação REST × socket, transporte do socket no mock e limitações, desvios do Figma e substituições de assets
 
 ## Notas de setup

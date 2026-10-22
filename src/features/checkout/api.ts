@@ -46,15 +46,10 @@ export function usePlaceOrder() {
         .post<Order>('/orders', attempt.body, { headers: { 'Idempotency-Key': attempt.key } })
         .then((r) => r.data)
     },
-    onSuccess: (order, attempt) => {
+    onSuccess: (order) => {
       queryClient.setQueryData(orderKeys.detail(userId, order.id), order)
       checkoutStorage.clearAttempt(userId)
       checkoutStorage.clearDraft(userId)
-      try {
-        sessionStorage.setItem(`kurio.order.provider:${order.id}`, attempt.provider)
-      } catch {
-        // Só para exibir o tipo de carteira no recibo.
-      }
       navigate({ to: '/pedidos/$orderId', params: { orderId: order.id }, replace: true })
     },
     onError: (error) => {

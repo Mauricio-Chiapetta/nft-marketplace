@@ -7,19 +7,10 @@ import thankYou from '@/assets/icons/thank-you.svg'
 import { Skeleton } from '@/components/ui/skeleton'
 import { formatEth } from '@/lib/eth'
 import type { Order } from '@/types/api'
-import { providerLabel, type WalletProvider } from '@/features/checkout/storage'
 import { NETWORK_LABELS, shortAddress } from '@/features/wallets/api'
 import { useOrder } from '../api'
 
 const dateFormat = new Intl.DateTimeFormat('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })
-
-function walletProvider(orderId: string) {
-  try {
-    return providerLabel((sessionStorage.getItem(`kurio.order.provider:${orderId}`) ?? '') as WalletProvider)
-  } catch {
-    return 'Carteira'
-  }
-}
 
 /** Itens e valores do snapshot do pedido: não mudam com o catálogo. */
 function ReceiptLines({ order }: { order: Order }) {
@@ -100,7 +91,8 @@ function ConfirmationDialog({ order, onClose }: { order: Order; onClose: () => v
             </div>
             <div>
               <dt className="text-sm/4 font-bold">Carteira</dt>
-              <dd className="text-[15px]">{walletProvider(order.id)}</dd>
+              {/* Do snapshot do pedido: igual em qualquer aba ou dispositivo. */}
+              <dd className="text-[15px]">{order.wallet.label}</dd>
             </div>
           </dl>
           <div className="flex flex-1 flex-col gap-3 px-6 pt-5 pb-12 sm:px-11">
