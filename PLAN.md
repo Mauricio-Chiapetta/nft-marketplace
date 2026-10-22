@@ -23,15 +23,15 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
   - [x] Idempotency key: mesma tentativa devolve o mesmo pedido; mesma chave com conteúdo diferente responde 409
   - [x] Mudanças no DB do mock publicam o evento no barramento (`src/mocks/events.ts`); o transporte via socket.io entra na fase 4
   - [x] Valores ETH como string decimal (`src/lib/eth.ts`)
-- [ ] **2. Layout + Auth**: tokens do Figma, header e footer, login, cadastro, sessão, logout, rotas protegidas com redirect
+- [x] **2. Layout + Auth**: tokens do Figma, header e footer, login, cadastro, sessão, logout, rotas protegidas com redirect
   - [x] Tokens do Figma (cores, Roboto Mono) em `src/index.css`; header (ativo por rota, divisória só fora do Mercado) e footer
   - [x] Login e cadastro (`/entrar`, `/criar-conta`: modal sobre a Início no desktop, tela cheia no mobile), validação local + erros da API por campo
   - [x] Sessão em `src/lib/session.ts` (token + validade, sincronizada entre abas), revalidada no boot; 401 encerra via interceptor do Axios
   - [x] Logout pelo menu do usuário no header; rota protegida `_authed` com `?redirect=` (placeholder `/perfil` até a fase 6)
-  - [ ] Google, Facebook e "Esqueceu a senha?" só avisam que não estão disponíveis
+  - [x] Google, Facebook e "Esqueceu a senha?" fora do escopo: avisam que não estão disponíveis
   - [x] Expiração de sessão na navegação: aviso + volta ao login com `?redirect=` e retomada após entrar
-  - [ ] Expiração no checkout preservando o formulário (fase 5)
-  - [x] Logout/troca de usuário limpa o cache privado do Query (e o MutationCache) e chama `socket.disconnect()` (o socket só conecta na fase 4)
+  - [x] Expiração no checkout preservando o formulário (rascunho em sessionStorage por usuário)
+  - [x] Logout/troca de usuário limpa o cache privado do Query (e o MutationCache); o socket reconecta com a nova identidade
   - [x] Senhas nunca em claro: hash com salt no mock, nada no localStorage, mutations de auth com `gcTime: 0`
   - [x] Rota 404
 - [x] **3. Início + Detalhe**: busca, filtros, ordenação e paginação na URL, skeletons, detalhe com edições e quantidade, favoritos otimistas com rollback
@@ -39,7 +39,7 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
   - [x] Abas (atalhos de ordenação), ordenação, categorias, faixa de preço e paginação na URL (`src/features/catalog/search.ts`)
   - [x] Busca no header (desktop) e "Explorar coleções" (mobile) com `?q=` e debounce
   - [x] Favoritos otimistas com rollback e cache por usuário (detalhe e cards do mobile)
-  - [ ] Filtro por rede e lista de favoritos: fora do escopo por ora (avisam em vez de simular)
+  - [x] Filtro por rede e lista de favoritos: fora do escopo (avisam em vez de simular)
   - [x] Mobile: tab bar, topo com busca e filtros em drawer, cards escalonados, detalhe com barra de compra
   - [x] Cancelar/descartar respostas obsoletas (AbortSignal via Axios + Query)
   - [x] Mudança de filtro volta para a página 1
@@ -47,20 +47,20 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
   - [x] Skeletons com shimmer, sem layout shift, respeitando `prefers-reduced-motion`
 
 ## Dia 2: compra, tempo real e entrega
-- [ ] **4. Carrinho + Socket**: carrinho no servidor, merge do carrinho do visitante ao logar, cupom, cotação, `nft.updated` com versão e deduplicação
-  - [ ] Carrinho do visitante sobrevive ao refresh (local ou guest id)
-  - [ ] Atenção: no login, `startSession` chama `clearPrivateState()` antes de salvar a sessão; ler o carrinho do visitante antes disso para o merge
-  - [ ] Eventos com id estável, recurso e versão; ignorar duplicatas e eventos antigos
-  - [ ] Reconciliar com a REST após reconexão
-  - [ ] Eventos de sessão anterior não afetam outro usuário; liberar listeners ao fim do ciclo de vida
-  - [ ] Avisar alterações em tempo real de forma acessível (aria-live)
-- [ ] **5. Checkout + Pedido**: formulário, carteira e rede, revisão, revalidação da cotação, idempotency key, `order.updated`, pendente/confirmado/recusado, recibo
-  - [ ] Simular conexão, recusa e desconexão da carteira
-  - [ ] Mudança na revalidação exige nova confirmação do usuário
-  - [ ] Impedir pedidos duplicados em clique repetido ou reenvio após timeout
-  - [ ] Recuperar pedido pendente após refresh/reconexão; confirmado e recusado são terminais
-  - [ ] Falha preserva os itens; confirmação remove só os itens e quantidades comprados
-  - [ ] Confirmação só para pedido confirmado; recibo é snapshot e não muda com o catálogo
+- [x] **4. Carrinho + Socket**: carrinho no servidor, merge do carrinho do visitante ao logar, cupom, cotação, `nft.updated` com versão e deduplicação
+  - [x] Carrinho do visitante no servidor via `X-Guest-Id` (localStorage); sobrevive ao refresh
+  - [x] Merge no login/cadastro por `POST /cart/merge` com o guest id (não depende do cache limpo); ajustes de quantidade avisados
+  - [x] Servidor Socket.IO no MSW (`src/mocks/realtime.ts`); cliente ignora duplicatas e versões antigas (`src/features/realtime`)
+  - [x] Reconciliar com a REST após reconexão (invalida queries ativas); queda e rede caída via `__mock.dropRealtime`/`setRealtimeOnline`
+  - [x] `order.updated` só para o dono (servidor) e conferido no cliente; nova conexão a cada troca de sessão; cleanup dos listeners
+  - [x] Avisar alterações em tempo real de forma acessível (toasts com aria-live, avisos por item no carrinho)
+- [x] **5. Checkout + Pedido**: formulário, carteira e rede, revisão, revalidação da cotação, idempotency key, `order.updated`, pendente/confirmado/recusado, recibo
+  - [x] Simular conexão, recusa (`?scenario=wallet-rejected`) e desconexão da carteira
+  - [x] Mudança na revalidação (409 com cotação nova) exige "Aceitar novos valores"
+  - [x] Idempotency-Key gravada antes do POST: clique repetido, timeout (reenvio automático) e refresh recuperam o mesmo pedido
+  - [x] Pedido pendente recuperado após refresh/reconexão (`order.updated` + polling de reserva); terminais não mudam
+  - [x] Falha preserva os itens; confirmação remove só os itens e quantidades comprados
+  - [x] Confirmação só para pedido confirmado; recibo é snapshot e não muda com o catálogo
 - [ ] **6. Perfil + Carteiras**: edição de perfil, avatar e senha, carteiras principal e secundária
   - [ ] Validação de formulários incluindo erros da API; alterações persistem após refresh
   - [ ] Perfil, carteiras e confirmação funcionando em mobile (sem frame no Figma)
