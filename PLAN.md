@@ -67,12 +67,13 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
   - [x] Validação de formulários incluindo erros da API (usuário em uso, senha atual incorreta, carteira duplicada); alterações persistem após refresh
   - [x] Perfil, carteiras e confirmação funcionando em mobile (sem frame no Figma: seguem o padrão do checkout)
   - [x] Avatar no menu do usuário; checkout sem carteira leva ao cadastro
-- [ ] **7. Testes Playwright**: os 12 cenários, desktop e mobile, baselines visuais
-  - [ ] Cada teste parte de estado isolado
-  - [ ] Controle de relógio, latência e disparo de eventos nos cenários sensíveis a tempo
-  - [ ] Relatório HTML e traces das falhas
-  - [ ] Regressão visual de início, detalhe, carrinho e pagamento, com dados estáveis
-  - [ ] Tempo real passa pelo `socket.io-client`; REST pelos handlers MSW
+- [x] **7. Testes Playwright**: os 12 cenários, desktop e mobile, baselines visuais
+  - [x] Cada teste parte de estado isolado (contexto novo + `?mockReset`); specs por cenário em `e2e/*.spec.ts`, helpers em `e2e/support`
+  - [x] Controle de relógio (`page.clock` na liquidação e no timeout do pedido), latência (`slow`) e disparo de eventos (`__mock.updateNft/settleOrder/replayEvent`)
+  - [x] Relatório HTML e traces/screenshots das falhas (`retain-on-failure`)
+  - [x] Regressão visual de início, detalhe, carrinho e pagamento (`e2e/__screenshots__`, relógio fixo; baselines geradas no Windows/Chromium)
+  - [x] Tempo real passa pelo `socket.io-client`; REST pelos handlers MSW
+  - [x] Correções achadas pelos testes: foco no primeiro campo inválido do checkout, merge do carrinho sobrescrito por GET em voo, logout no mobile
 - [ ] **8. Lighthouse + docs**: auditoria, README da solução, ARCHITECTURE.md, deploy final
   - [ ] Lighthouse em início e detalhe, mobile e desktop, 3 medições cada, mediana por categoria
   - [ ] Registrar LCP, CLS, TBT, config versionada, versões das ferramentas e ambiente; justificar metas não atingidas
