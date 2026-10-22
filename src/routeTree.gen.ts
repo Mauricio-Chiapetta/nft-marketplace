@@ -17,6 +17,7 @@ import { Route as EntrarRouteImport } from './routes/entrar'
 import { Route as AuthedCheckoutRouteImport } from './routes/_authed/checkout'
 import { Route as AuthedPerfilRouteImport } from './routes/_authed/perfil'
 import { Route as NftsNftIdRouteImport } from './routes/nfts.$nftId'
+import { Route as AuthedPedidosOrderIdRouteImport } from './routes/_authed/pedidos.$orderId'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -57,6 +58,11 @@ const NftsNftIdRoute = NftsNftIdRouteImport.update({
   path: '/nfts/$nftId',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthedPedidosOrderIdRoute = AuthedPedidosOrderIdRouteImport.update({
+  id: '/pedidos/$orderId',
+  path: '/pedidos/$orderId',
+  getParentRoute: () => AuthedRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -66,6 +72,7 @@ export interface FileRoutesByFullPath {
   '/checkout': typeof AuthedCheckoutRoute
   '/perfil': typeof AuthedPerfilRoute
   '/nfts/$nftId': typeof NftsNftIdRoute
+  '/pedidos/$orderId': typeof AuthedPedidosOrderIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -75,6 +82,7 @@ export interface FileRoutesByTo {
   '/checkout': typeof AuthedCheckoutRoute
   '/perfil': typeof AuthedPerfilRoute
   '/nfts/$nftId': typeof NftsNftIdRoute
+  '/pedidos/$orderId': typeof AuthedPedidosOrderIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -86,6 +94,7 @@ export interface FileRoutesById {
   '/_authed/checkout': typeof AuthedCheckoutRoute
   '/_authed/perfil': typeof AuthedPerfilRoute
   '/nfts/$nftId': typeof NftsNftIdRoute
+  '/_authed/pedidos/$orderId': typeof AuthedPedidosOrderIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/perfil'
     | '/nfts/$nftId'
+    | '/pedidos/$orderId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -106,6 +116,7 @@ export interface FileRouteTypes {
     | '/checkout'
     | '/perfil'
     | '/nfts/$nftId'
+    | '/pedidos/$orderId'
   id:
     | '__root__'
     | '/'
@@ -116,6 +127,7 @@ export interface FileRouteTypes {
     | '/_authed/checkout'
     | '/_authed/perfil'
     | '/nfts/$nftId'
+    | '/_authed/pedidos/$orderId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -185,17 +197,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof NftsNftIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authed/pedidos/$orderId': {
+      id: '/_authed/pedidos/$orderId'
+      path: '/pedidos/$orderId'
+      fullPath: '/pedidos/$orderId'
+      preLoaderRoute: typeof AuthedPedidosOrderIdRouteImport
+      parentRoute: typeof AuthedRoute
+    }
   }
 }
 
 interface AuthedRouteChildren {
   AuthedCheckoutRoute: typeof AuthedCheckoutRoute
   AuthedPerfilRoute: typeof AuthedPerfilRoute
+  AuthedPedidosOrderIdRoute: typeof AuthedPedidosOrderIdRoute
 }
 
 const AuthedRouteChildren: AuthedRouteChildren = {
   AuthedCheckoutRoute: AuthedCheckoutRoute,
   AuthedPerfilRoute: AuthedPerfilRoute,
+  AuthedPedidosOrderIdRoute: AuthedPedidosOrderIdRoute,
 }
 
 const AuthedRouteWithChildren =

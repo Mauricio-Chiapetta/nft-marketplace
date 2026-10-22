@@ -44,8 +44,8 @@ export function MobileTabBar() {
   const item = 'grid size-11 place-items-center rounded-full transition-colors'
   const color = (active: boolean) => (active ? 'text-text-accent' : 'text-text-secondary hover:text-text-accent')
 
-  // No detalhe e no carrinho a barra de compra ocupa o rodapé (frames do Figma).
-  if (pathname.startsWith('/nfts/') || pathname === '/carrinho') return null
+  // Fluxo de compra (detalhe, carrinho, pagamento, pedido): o Figma não tem a tab bar.
+  if (pathname.startsWith('/nfts/') || pathname === '/carrinho' || pathname === '/checkout' || pathname.startsWith('/pedidos/')) return null
 
   return (
     <nav aria-label="Navegação" className="fixed inset-x-0 bottom-0 z-40 h-[126px] md:hidden">
