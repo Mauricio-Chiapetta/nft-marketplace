@@ -33,6 +33,18 @@ export async function login(page: Page, email: string, redirect = '/') {
   await expect(page).toHaveURL(new RegExp(`${redirect.replace(/[/?]/g, '\\$&')}$`))
 }
 
+/** Sai pelo menu do usuário (desktop) ou pela aba da conta (mobile, sem header). */
+export async function logout(page: Page) {
+  if (isMobile()) {
+    if (!/\/(perfil|carteiras)$/.test(new URL(page.url()).pathname)) await page.goto('/perfil')
+    await page.getByRole('button', { name: 'Sair' }).click()
+  } else {
+    await page.getByRole('button', { name: /^Conta de / }).click()
+    await page.getByRole('menuitem', { name: 'Sair' }).click()
+  }
+  await expect(page.getByRole('link', { name: 'Entrar', exact: true }).first()).toBeVisible()
+}
+
 /** Botão de compra do detalhe (desktop: "COMPRAR"; mobile: "Comprar NFT"). */
 export const buyButton = (page: Page) => page.getByRole('button', { name: /^comprar( nft)?$/i })
 
