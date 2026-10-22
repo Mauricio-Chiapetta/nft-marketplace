@@ -21,8 +21,12 @@ async function enableMocking() {
   })
 }
 
-enableMocking().then(() => {
+enableMocking().then(async () => {
   installSessionEffects(router)
+  // Import dinâmico: o engine.io-client guarda a referência a WebSocket ao carregar,
+  // então o socket.io-client só pode ser avaliado depois que o MSW a interceptou.
+  const { installRealtime } = await import('@/features/realtime/realtime')
+  installRealtime(queryClient)
   void revalidateSession()
 
   createRoot(document.getElementById('root')!).render(

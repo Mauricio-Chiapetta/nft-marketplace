@@ -1,5 +1,6 @@
 import axios from 'axios'
 import type { ApiErrorBody } from '@/types/api'
+import { getGuestId } from './guest'
 import { sessionStore } from './session'
 
 // Toda chamada REST passa por esta instância. O MSW intercepta /api/*.
@@ -14,6 +15,8 @@ api.interceptors.request.use((config) => {
   if (session && !config.headers.has('Authorization')) {
     config.headers.set('Authorization', `Bearer ${session.token}`)
   }
+  // Carrinho e cotação de visitante; com sessão, o servidor usa o usuário.
+  if (!config.headers.has('X-Guest-Id')) config.headers.set('X-Guest-Id', getGuestId())
   return config
 })
 

@@ -3,11 +3,13 @@
 import type { RealtimeEvent } from '@/types/api'
 import { getDb, mutate, resetDb } from './db'
 import { clearEventHistory, publish, recentEvents } from './events'
+import { realtimeControl } from './realtime'
 import { getScenario, setScenario, type ScenarioName } from './scenario'
 import { updateNftEditions, type EditionPatch } from './services/catalog'
 import { armPendingOrders, clearSettlementTimers, settleOrder } from './services/orders'
 
 export function resetMock() {
+  realtimeControl.setOnline(true)
   clearSettlementTimers()
   resetDb()
   clearEventHistory()
@@ -33,6 +35,10 @@ export const mockControl = {
   recentEvents: () => structuredClone(recentEvents()),
   /** Republica um evento existente, como faria um servidor com entrega duplicada. */
   replayEvent: (event: RealtimeEvent) => publish(structuredClone(event)),
+  /** Tempo real: derrubar conexões ou ficar sem conexão (`setRealtimeOnline(false)`). */
+  dropRealtime: realtimeControl.dropConnections,
+  setRealtimeOnline: realtimeControl.setOnline,
+  realtimeClients: realtimeControl.connectedClients,
   snapshot: () => structuredClone(getDb()),
 }
 

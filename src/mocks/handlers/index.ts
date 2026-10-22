@@ -7,6 +7,7 @@ import { favoritesHandlers } from './favorites'
 import { networkHandlers } from './network'
 import { orderHandlers } from './orders'
 import { profileHandlers } from './profile'
+import { realtimeHandlers } from '../realtime'
 import { quoteHandlers } from './quotes'
 import { walletHandlers } from './wallets'
 
@@ -22,5 +23,6 @@ export const handlers = [
   ...orderHandlers,
   ...profileHandlers,
   ...walletHandlers,
+  ...realtimeHandlers,
   http.all('/api/*', () => errors.notFound('Rota da API inexistente.')),
 ]
