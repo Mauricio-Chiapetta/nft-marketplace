@@ -8,9 +8,17 @@ export default defineConfig({
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
   reporter: [['list'], ['html', { open: 'never' }]],
+  // Baselines sem sufixo de SO: geradas e conferidas no mesmo ambiente (ver README).
+  snapshotPathTemplate: '{testDir}/__screenshots__/{testFilePath}/{arg}-{projectName}{ext}',
+  expect: {
+    toHaveScreenshot: { animations: 'disabled', caret: 'hide', maxDiffPixelRatio: 0.01 },
+  },
   use: {
     baseURL: `http://localhost:${PORT}`,
-    trace: 'on-first-retry',
+    locale: 'pt-BR',
+    timezoneId: 'America/Sao_Paulo',
+    trace: 'retain-on-failure',
+    screenshot: 'only-on-failure',
   },
   projects: [
     { name: 'desktop', use: { ...devices['Desktop Chrome'] } },
