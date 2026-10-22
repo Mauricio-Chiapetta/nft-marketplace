@@ -61,9 +61,12 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
   - [x] Pedido pendente recuperado após refresh/reconexão (`order.updated` + polling de reserva); terminais não mudam
   - [x] Falha preserva os itens; confirmação remove só os itens e quantidades comprados
   - [x] Confirmação só para pedido confirmado; recibo é snapshot e não muda com o catálogo
-- [ ] **6. Perfil + Carteiras**: edição de perfil, avatar e senha, carteiras principal e secundária
-  - [ ] Validação de formulários incluindo erros da API; alterações persistem após refresh
-  - [ ] Perfil, carteiras e confirmação funcionando em mobile (sem frame no Figma)
+- [x] **6. Perfil + Carteiras**: edição de perfil, avatar e senha, carteiras principal e secundária
+  - [x] `/perfil`: nome, usuário e bio (e-mail só leitura), avatar PNG/JPEG/WebP até 300 KB com remoção, alteração de senha (encerra as outras sessões)
+  - [x] `/carteiras`: cadastro da principal e da secundária, edição de apelido/endereço/papel (trocar o papel inverte as duas)
+  - [x] Validação de formulários incluindo erros da API (usuário em uso, senha atual incorreta, carteira duplicada); alterações persistem após refresh
+  - [x] Perfil, carteiras e confirmação funcionando em mobile (sem frame no Figma: seguem o padrão do checkout)
+  - [x] Avatar no menu do usuário; checkout sem carteira leva ao cadastro
 - [ ] **7. Testes Playwright**: os 12 cenários, desktop e mobile, baselines visuais
   - [ ] Cada teste parte de estado isolado
   - [ ] Controle de relógio, latência e disparo de eventos nos cenários sensíveis a tempo
@@ -81,7 +84,7 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
     - Socket no mock: só namespace padrão; o binding não lê o `auth` do handshake (cliente envia o evento `auth` após conectar); o servidor simulado envia os pings do Engine.IO; "sem conexão" = handshake sem resposta (fechar antes do handshake trava o Manager); `socket.io-client` carregado por import dinâmico depois do MSW (engine.io guarda o WebSocket ao carregar)
     - Abas "Novos lançamentos"/"Em alta" são atalhos de ordenação (recentes/mais favoritados); estrelas de avaliação do Figma viraram contagem de favoritos; rede Solana virou Arbitrum
     - Cadastro: "Nome de usuário" do Figma grava `name`; `username` é derivado do e-mail
-    - Contas novas ainda não têm carteira (cadastro de carteiras na fase 6): demonstrar a compra com Ana ou Bruno
+    - Perfil e carteiras sem frame no Figma: compostos com os campos e cards do checkout
   - [ ] ARCHITECTURE.md: contratos REST e eventos, política de sessão, estado do carrinho, cache/retry/sincronização, reconciliação REST × socket, transporte do socket no mock e limitações, desvios do Figma e substituições de assets
 
 ## Notas de setup
