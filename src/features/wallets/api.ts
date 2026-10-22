@@ -1,7 +1,7 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { api } from '@/lib/api'
 import { useSession } from '@/lib/session'
-import type { Network, Wallet } from '@/types/api'
+import type { Network, Wallet, WalletInput, WalletRole } from '@/types/api'
 
 export const walletKeys = {
   all: (userId: string) => ['me', userId, 'wallets'] as const,
@@ -32,10 +32,39 @@ function useWalletMutation<TInput>(request: (input: TInput) => Promise<Wallet>) 
   return useMutation({
     mutationFn: request,
     onSuccess: (wallet) => {
-      queryClient.setQueryData<Wallet[]>(walletKeys.all(userId), (list) => list?.map((w) => (w.id === wallet.id ? wallet : w)))
+      // Se o papel mudou, a outra carteira assume o papel antigo (como no servidor).
+      const previous = queryClient.getQueryData<Wallet[]>(walletKeys.all(userId))?.find((w) => w.id === wallet.id)
+      queryClient.setQueryData<Wallet[]>(walletKeys.all(userId), (list) =>
+        list?.map((w) => {
+          if (w.id === wallet.id) return wallet
+          if (previous && w.role === wallet.role) return { ...w, role: previous.role }
+          return w
+        }),
+      )
     },
     onSettled: () => queryClient.invalidateQueries({ queryKey: walletKeys.all(userId) }),
   })
+}
+
+export const WALLET_ROLE_LABELS: Record<WalletRole, string> = { primary: 'Principal', secondary: 'Secundária' }
+
+export function useCreateWallet() {
+  const queryClient = useQueryClient()
+  const userId = useSession()?.user.id ?? ''
+  return useMutation({
+    mutationFn: (input: WalletInput) => api.post<Wallet>('/me/wallets', input).then((r) => r.data),
+    onSuccess: (wallet) => {
+      queryClient.setQueryData<Wallet[]>(walletKeys.all(userId), (list) => (list ? [...list, wallet] : list))
+    },
+    onSettled: () => queryClient.invalidateQueries({ queryKey: walletKeys.all(userId) }),
+  })
+}
+
+/** Trocar o papel inverte principal e secundária no servidor: a lista é recarregada. */
+export function useUpdateWallet() {
+  return useWalletMutation(({ walletId, ...input }: Partial<WalletInput> & { walletId: string }) =>
+    api.patch<Wallet>(`/me/wallets/${walletId}`, input).then((r) => r.data),
+  )
 }
 
 /** Conexão simulada com a extensão da carteira (pode ser recusada pelo cenário). */

@@ -259,7 +259,18 @@ export function CheckoutPage({ session }: { session: Session }) {
                 </SelectBox>
               )}
             </Field>
-            <Field label="Tipo de carteira" required error={errors.walletId} hint={walletList.length === 0 && !wallets.isPending ? 'Cadastre uma carteira no seu perfil.' : undefined}>
+            <Field label="Tipo de carteira" required error={errors.walletId} 
+              hint={
+                walletList.length === 0 && !wallets.isPending ? (
+                  <>
+                    Nenhuma carteira cadastrada.{' '}
+                    <Link to="/carteiras" className="font-bold text-text-accent underline underline-offset-2">
+                      Cadastrar carteira
+                    </Link>
+                  </>
+                ) : undefined
+              }
+            >
               {(a) => (
                 <SelectBox {...a} value={walletId} required onChange={(e) => set('walletId', e.target.value)} disabled={wallets.isPending}>
                   <option value="" disabled>

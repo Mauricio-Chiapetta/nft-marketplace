@@ -82,7 +82,7 @@ export function SiteHeader() {
             )}
           </Link>
           {session ? (
-            <UserMenu name={session.user.name} />
+            <UserMenu name={session.user.name} avatarUrl={session.user.avatarUrl} />
           ) : (
             <Link
               to="/entrar"

@@ -6,7 +6,7 @@ interface FieldProps {
   label: string
   required?: boolean
   error?: string
-  hint?: string
+  hint?: ReactNode
   children: (props: { id: string; 'aria-invalid'?: true; 'aria-describedby'?: string; 'aria-required'?: true }) => ReactNode
   className?: string
 }
