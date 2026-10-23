@@ -22,7 +22,8 @@ function RootLayout() {
     <>
       <div className="mx-auto flex min-h-dvh w-full max-w-[1248px] flex-col gap-4 px-6 pt-10 pb-[134px] md:gap-8 md:pt-6 md:pb-6">
         <SiteHeader />
-        <main className="flex-1">
+        {/* min-h-dvh: o footer começa abaixo da dobra e não é empurrado quando o conteúdo carrega (CLS). */}
+        <main className="min-h-dvh flex-1">
           <Outlet />
         </main>
         <SiteFooter />

@@ -9,16 +9,11 @@ export const worker = setupWorker(...handlers)
 /**
  * Prepara o "servidor" simulado antes do primeiro request:
  * - `?scenario=<nome>[&target=...]` seleciona o cenário da aba;
- * - `?mockReset` restaura o seed e é removido da URL (refresh não reseta de novo).
+ * - `?mockReset` (já retirado da URL por ./url-flags) restaura o seed.
  */
-export function bootMockServer() {
-  const url = new URL(window.location.href)
-  if (url.searchParams.has('mockReset')) {
-    resetMock()
-    url.searchParams.delete('mockReset')
-    window.history.replaceState(window.history.state, '', url)
-  }
-  initScenarioFromUrl(url.search)
+export function bootMockServer(reset: boolean) {
+  if (reset) resetMock()
+  initScenarioFromUrl(window.location.search)
   armPendingOrders()
   window.__mock = mockControl
 }

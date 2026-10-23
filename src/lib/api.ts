@@ -1,5 +1,6 @@
 import axios from 'axios'
 import type { ApiErrorBody } from '@/types/api'
+import { backendReady } from './backend'
 import { getGuestId } from './guest'
 import { sessionStore } from './session'
 
@@ -10,7 +11,9 @@ export const api = axios.create({
   headers: { 'Content-Type': 'application/json' },
 })
 
-api.interceptors.request.use((config) => {
+api.interceptors.request.use(async (config) => {
+  // A UI renderiza antes de o MSW subir; nenhuma chamada sai antes dele.
+  await backendReady
   const session = sessionStore.get()
   if (session && !config.headers.has('Authorization')) {
     config.headers.set('Authorization', `Bearer ${session.token}`)

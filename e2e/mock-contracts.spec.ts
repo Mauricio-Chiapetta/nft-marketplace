@@ -4,6 +4,8 @@ import { call, login, mock, type ApiErrorBody } from './support/api.ts'
 
 async function open(page: Page, query = '') {
   await page.goto(`/?mockReset${query}`)
+  // A UI aparece antes do MSW: as chamadas diretas precisam do service worker no controle.
+  await page.waitForFunction(() => '__mock' in window && Boolean(navigator.serviceWorker.controller))
   await expect(page.getByRole('heading', { name: /SEJA DONO/ })).toBeVisible()
 }
 

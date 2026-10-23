@@ -59,7 +59,7 @@ export function MobileNftDetail({ nft, state }: { nft: Nft; state: PurchaseState
           className="mt-2 h-[356px] w-full rounded-3xl object-cover"
         />
         {nft.images.length > 1 && (
-          <div className="absolute top-[365px] left-1/2 flex -translate-x-1/2 gap-3" role="group" aria-label="Imagens">
+          <div className="absolute top-[356px] left-1/2 flex -translate-x-1/2" role="group" aria-label="Imagens">
             {nft.images.map((_, i) => (
               <button
                 key={i}
@@ -67,8 +67,11 @@ export function MobileNftDetail({ nft, state }: { nft: Nft; state: PurchaseState
                 onClick={() => setImageIndex(i)}
                 aria-label={`Ver imagem ${i + 1}`}
                 aria-pressed={i === imageIndex}
-                className={cn('h-[7px] rounded-full transition-all', i === imageIndex ? 'w-6 bg-primary' : 'w-[7px] bg-primary/40')}
-              />
+                // Alvo de toque de 24px em volta do ponto do Figma.
+                className="grid h-6 min-w-6 place-items-center px-0.5"
+              >
+                <span aria-hidden className={cn('h-[7px] rounded-full transition-all', i === imageIndex ? 'w-6 bg-primary' : 'w-[7px] bg-primary/40')} />
+              </button>
             ))}
           </div>
         )}
