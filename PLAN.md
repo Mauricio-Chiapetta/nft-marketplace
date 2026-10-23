@@ -74,19 +74,15 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
   - [x] Regressão visual de início, detalhe, carrinho e pagamento (`e2e/__screenshots__`, relógio fixo; baselines geradas no Windows/Chromium)
   - [x] Tempo real passa pelo `socket.io-client`; REST pelos handlers MSW
   - [x] Correções achadas pelos testes: foco no primeiro campo inválido do checkout, merge do carrinho sobrescrito por GET em voo, logout no mobile
-- [ ] **8. Lighthouse + docs**: auditoria, README da solução, ARCHITECTURE.md, deploy final
-  - [ ] Lighthouse em início e detalhe, mobile e desktop, 3 medições cada, mediana por categoria
-  - [ ] Registrar LCP, CLS, TBT, config versionada, versões das ferramentas e ambiente; justificar metas não atingidas
-  - [ ] Script `lighthouse`
-  - [ ] No mobile, o hero desktop (com `fetchPriority="high"`) e a imagem do detalhe desktop ficam ocultos mas ainda baixam: trocar por `<picture>`/render condicional para não pesar o LCP
-  - [ ] README: setup, variáveis de ambiente, credenciais fictícias, seleção/reset de cenários, como reproduzir as falhas
-  - [ ] Registrar no ARCHITECTURE.md (decisões já tomadas, hoje só no código):
-    - Checkout: campos do Figma sem uso na API omitidos (Nome do perfil, Código de indicação, Nome ENS); "Tipo de carteira" virou o seletor das carteiras cadastradas; provedor (WalletConnect/MetaMask/Coinbase) é só a forma de conexão simulada
-    - Socket no mock: só namespace padrão; o binding não lê o `auth` do handshake (cliente envia o evento `auth` após conectar); o servidor simulado envia os pings do Engine.IO; "sem conexão" = handshake sem resposta (fechar antes do handshake trava o Manager); `socket.io-client` carregado por import dinâmico depois do MSW (engine.io guarda o WebSocket ao carregar)
-    - Abas "Novos lançamentos"/"Em alta" são atalhos de ordenação (recentes/mais favoritados); estrelas de avaliação do Figma viraram contagem de favoritos; rede Solana virou Arbitrum
-    - Cadastro: "Nome de usuário" do Figma grava `name`; `username` é derivado do e-mail
-    - Perfil e carteiras sem frame no Figma: compostos com os campos e cards do checkout
-  - [ ] ARCHITECTURE.md: contratos REST e eventos, política de sessão, estado do carrinho, cache/retry/sincronização, reconciliação REST × socket, transporte do socket no mock e limitações, desvios do Figma e substituições de assets
+- [x] **8. Lighthouse + docs**: auditoria, README da solução, ARCHITECTURE.md (falta o deploy final)
+  - [x] Lighthouse em início e detalhe, mobile e desktop, 3 medições cada, mediana por categoria (`lighthouse/reports`)
+  - [x] LCP, CLS, TBT, config versionada (`lighthouse/config.mjs`), versões e ambiente; metas não atingidas justificadas no ARCHITECTURE.md
+  - [x] Script `pnpm lighthouse` (Lighthouse 12.8.2: a 13 exige Node 22)
+  - [x] Só a composição do viewport é renderizada (não baixa a imagem oculta); UI renderiza em paralelo ao boot do MSW
+  - [x] README: setup, variáveis, credenciais, cenários e reset, fluxos de falha (enunciado em docs/DESAFIO.md)
+  - [x] ARCHITECTURE.md: contratos, eventos, sessão, carrinho, cache/retry, reconciliação, transporte do socket, desvios do Figma e assets
+  - [x] 403 `FORBIDDEN` (carteira de outra conta) e cenário `forbidden`
+  - [ ] Deploy na Vercel e URL no README
 
 ## Notas de setup
 - `msw` fixado em 2.x por causa do peer de `@mswjs/socket.io-binding`
