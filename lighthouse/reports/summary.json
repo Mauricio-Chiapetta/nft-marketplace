@@ -1,0 +1,261 @@
+{
+  "environment": {
+    "date": "2026-10-23T06:37:01.384Z",
+    "lighthouse": "12.8.2",
+    "chrome": "156.0.0.0",
+    "node": "v20.20.0",
+    "os": "Windows_NT 10.0.19045 (x64)",
+    "cpu": "Intel(R) Core(TM) i3-6100 CPU @ 3.70GHz",
+    "memoryGb": 16,
+    "target": "http://localhost:4174 (vite preview do build de produção, mocks no cenário padrão)",
+    "runs": 3
+  },
+  "medians": [
+    {
+      "page": "inicio",
+      "profile": "mobile",
+      "performance": 69,
+      "accessibility": 100,
+      "bestPractices": 82,
+      "seo": 100,
+      "lcpMs": 4564,
+      "cls": 0.004,
+      "tbtMs": 327
+    },
+    {
+      "page": "inicio",
+      "profile": "desktop",
+      "performance": 98,
+      "accessibility": 97,
+      "bestPractices": 81,
+      "seo": 100,
+      "lcpMs": 1026,
+      "cls": 0.002,
+      "tbtMs": 1
+    },
+    {
+      "page": "detalhe",
+      "profile": "mobile",
+      "performance": 75,
+      "accessibility": 100,
+      "bestPractices": 82,
+      "seo": 100,
+      "lcpMs": 4266,
+      "cls": 0,
+      "tbtMs": 229
+    },
+    {
+      "page": "detalhe",
+      "profile": "desktop",
+      "performance": 98,
+      "accessibility": 100,
+      "bestPractices": 81,
+      "seo": 100,
+      "lcpMs": 1024,
+      "cls": 0,
+      "tbtMs": 0
+    }
+  ],
+  "runs": [
+    {
+      "page": "inicio",
+      "profile": "mobile",
+      "run": 1,
+      "performance": 67,
+      "accessibility": 100,
+      "bestPractices": 82,
+      "seo": 100,
+      "lcpMs": 4647,
+      "cls": 0.004,
+      "tbtMs": 414,
+      "failing": [
+        "performance/first-contentful-paint",
+        "performance/largest-contentful-paint",
+        "performance/total-blocking-time",
+        "best-practices/is-on-https"
+      ]
+    },
+    {
+      "page": "inicio",
+      "profile": "mobile",
+      "run": 2,
+      "performance": 70,
+      "accessibility": 100,
+      "bestPractices": 82,
+      "seo": 100,
+      "lcpMs": 4547,
+      "cls": 0,
+      "tbtMs": 327,
+      "failing": [
+        "performance/first-contentful-paint",
+        "performance/largest-contentful-paint",
+        "performance/total-blocking-time",
+        "best-practices/is-on-https"
+      ]
+    },
+    {
+      "page": "inicio",
+      "profile": "mobile",
+      "run": 3,
+      "performance": 69,
+      "accessibility": 100,
+      "bestPractices": 82,
+      "seo": 100,
+      "lcpMs": 4564,
+      "cls": 0.004,
+      "tbtMs": 320,
+      "failing": [
+        "performance/first-contentful-paint",
+        "performance/largest-contentful-paint",
+        "performance/total-blocking-time",
+        "best-practices/is-on-https"
+      ]
+    },
+    {
+      "page": "inicio",
+      "profile": "desktop",
+      "run": 1,
+      "performance": 98,
+      "accessibility": 97,
+      "bestPractices": 81,
+      "seo": 100,
+      "lcpMs": 1047,
+      "cls": 0.002,
+      "tbtMs": 1,
+      "failing": [
+        "accessibility/target-size",
+        "best-practices/is-on-https"
+      ]
+    },
+    {
+      "page": "inicio",
+      "profile": "desktop",
+      "run": 2,
+      "performance": 98,
+      "accessibility": 97,
+      "bestPractices": 81,
+      "seo": 100,
+      "lcpMs": 962,
+      "cls": 0.002,
+      "tbtMs": 9,
+      "failing": [
+        "accessibility/target-size",
+        "best-practices/is-on-https"
+      ]
+    },
+    {
+      "page": "inicio",
+      "profile": "desktop",
+      "run": 3,
+      "performance": 98,
+      "accessibility": 97,
+      "bestPractices": 81,
+      "seo": 100,
+      "lcpMs": 1026,
+      "cls": 0.002,
+      "tbtMs": 0,
+      "failing": [
+        "accessibility/target-size",
+        "best-practices/is-on-https"
+      ]
+    },
+    {
+      "page": "detalhe",
+      "profile": "mobile",
+      "run": 1,
+      "performance": 75,
+      "accessibility": 100,
+      "bestPractices": 82,
+      "seo": 100,
+      "lcpMs": 4266,
+      "cls": 0,
+      "tbtMs": 229,
+      "failing": [
+        "performance/first-contentful-paint",
+        "performance/largest-contentful-paint",
+        "performance/total-blocking-time",
+        "best-practices/is-on-https"
+      ]
+    },
+    {
+      "page": "detalhe",
+      "profile": "mobile",
+      "run": 2,
+      "performance": 74,
+      "accessibility": 100,
+      "bestPractices": 82,
+      "seo": 100,
+      "lcpMs": 4270,
+      "cls": 0,
+      "tbtMs": 245,
+      "failing": [
+        "performance/first-contentful-paint",
+        "performance/largest-contentful-paint",
+        "performance/total-blocking-time",
+        "best-practices/is-on-https"
+      ]
+    },
+    {
+      "page": "detalhe",
+      "profile": "mobile",
+      "run": 3,
+      "performance": 76,
+      "accessibility": 100,
+      "bestPractices": 82,
+      "seo": 100,
+      "lcpMs": 4256,
+      "cls": 0,
+      "tbtMs": 187,
+      "failing": [
+        "performance/first-contentful-paint",
+        "performance/largest-contentful-paint",
+        "best-practices/is-on-https"
+      ]
+    },
+    {
+      "page": "detalhe",
+      "profile": "desktop",
+      "run": 1,
+      "performance": 97,
+      "accessibility": 100,
+      "bestPractices": 81,
+      "seo": 100,
+      "lcpMs": 1101,
+      "cls": 0,
+      "tbtMs": 15,
+      "failing": [
+        "best-practices/is-on-https"
+      ]
+    },
+    {
+      "page": "detalhe",
+      "profile": "desktop",
+      "run": 2,
+      "performance": 98,
+      "accessibility": 100,
+      "bestPractices": 81,
+      "seo": 100,
+      "lcpMs": 964,
+      "cls": 0,
+      "tbtMs": 0,
+      "failing": [
+        "best-practices/is-on-https"
+      ]
+    },
+    {
+      "page": "detalhe",
+      "profile": "desktop",
+      "run": 3,
+      "performance": 98,
+      "accessibility": 100,
+      "bestPractices": 81,
+      "seo": 100,
+      "lcpMs": 1024,
+      "cls": 0,
+      "tbtMs": 0,
+      "failing": [
+        "best-practices/is-on-https"
+      ]
+    }
+  ]
+}
