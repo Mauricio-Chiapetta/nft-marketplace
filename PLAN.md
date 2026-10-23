@@ -16,7 +16,7 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
 
 ## Dia 1: fundação e fluxos de leitura
 - [x] **0. Setup**: Vite, Tailwind v4, shadcn/ui, Router e Query, Axios, MSW, socket.io-client + binding, Playwright, estrutura de pastas, `vercel.json`
-  - [ ] Deploy na Vercel (importar o repo; build `pnpm build`, output `dist`)
+  - [x] Deploy na Vercel (build `pnpm build`, output `dist`)
 - [x] **1. Contratos + mock DB**: tipos, fixtures (~40 NFTs, 2 usuários), DB do MSW em localStorage com reset, handlers REST
   - [x] Cenários configuráveis e reproduzíveis: sucesso, vazio, latência variável, respostas fora de ordem, offline, 4xx/5xx, sessão expirada, 401/403, conflito de cadastro/validação, cupom inválido e expirado, preço alterado/edição esgotada na compra, timeout após criar pedido, pagamento confirmado e recusado
   - [x] Formato padronizado de erro: validação, sessão inválida, permissão, inexistente, conflito de disponibilidade, falha transitória
@@ -74,7 +74,7 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
   - [x] Regressão visual de início, detalhe, carrinho e pagamento (`e2e/__screenshots__`, relógio fixo; baselines geradas no Windows/Chromium)
   - [x] Tempo real passa pelo `socket.io-client`; REST pelos handlers MSW
   - [x] Correções achadas pelos testes: foco no primeiro campo inválido do checkout, merge do carrinho sobrescrito por GET em voo, logout no mobile
-- [x] **8. Lighthouse + docs**: auditoria, README da solução, ARCHITECTURE.md (falta o deploy final)
+- [x] **8. Lighthouse + docs**: auditoria, README da solução, ARCHITECTURE.md, deploy final
   - [x] Lighthouse em início e detalhe, mobile e desktop, 3 medições cada, mediana por categoria (`lighthouse/reports`)
   - [x] LCP, CLS, TBT, config versionada (`lighthouse/config.mjs`), versões e ambiente; metas não atingidas justificadas no ARCHITECTURE.md
   - [x] Script `pnpm lighthouse` (Lighthouse 12.8.2: a 13 exige Node 22)
@@ -82,7 +82,7 @@ Uma fase por sessão. Ao concluir: marcar aqui, commitar e rodar `/clear`.
   - [x] README: setup, variáveis, credenciais, cenários e reset, fluxos de falha (enunciado em docs/DESAFIO.md)
   - [x] ARCHITECTURE.md: contratos, eventos, sessão, carrinho, cache/retry, reconciliação, transporte do socket, desvios do Figma e assets
   - [x] 403 `FORBIDDEN` (carteira de outra conta) e cenário `forbidden`
-  - [ ] Deploy na Vercel e URL no README
+  - [x] Deploy na Vercel (https://nft-marketplace-iota-coral.vercel.app): rotas diretas, refresh, mocks, login e Socket.IO conferidos
 
 ## Notas de setup
 - `msw` fixado em 2.x por causa do peer de `@mswjs/socket.io-binding`

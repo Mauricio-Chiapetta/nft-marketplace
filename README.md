@@ -5,7 +5,7 @@ Solução do desafio de frontend descrito em [docs/DESAFIO.md](docs/DESAFIO.md):
 Stack: React 19, TypeScript, TanStack Router e Query, Axios, Socket.IO (`socket.io-client` + `@mswjs/socket.io-binding`), Tailwind CSS v4, shadcn/ui, MSW 2, Playwright e Lighthouse. Decisões, contratos e limitações estão em [ARCHITECTURE.md](ARCHITECTURE.md).
 
 - **Repositório:** https://github.com/Mauricio-Chiapetta/nft-marketplace
-- **Deploy:** _URL da Vercel (preencher após o deploy)_
+- **Deploy:** https://nft-marketplace-iota-coral.vercel.app
 
 ## Setup
 
