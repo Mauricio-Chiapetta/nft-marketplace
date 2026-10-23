@@ -10,6 +10,7 @@ import shareLinkedin from '@/assets/icons/share-linkedin.svg'
 import shareEmail from '@/assets/icons/share-email.svg'
 import shareTwitter from '@/assets/icons/share-twitter.svg'
 import { Skeleton } from '@/components/ui/skeleton'
+import { DESKTOP_QUERY, useMediaQuery } from '@/hooks/use-media-query'
 import { formatEth } from '@/lib/eth'
 import { toApiError } from '@/lib/api-error'
 import { useAddToCart } from '@/features/cart/api'
@@ -31,6 +32,7 @@ export function NftDetail({ nft }: { nft: Nft }) {
     setQuantity(1)
   }
 
+  const desktop = useMediaQuery(DESKTOP_QUERY)
   const navigate = useNavigate()
   const addToCart = useAddToCart()
 
@@ -71,10 +73,8 @@ export function NftDetail({ nft }: { nft: Nft }) {
   }
 
   return (
-    <>
-      <MobileNftDetail nft={nft} state={state} />
-      <DesktopNftDetail nft={nft} state={state} />
-    </>
+    // Só a composição do viewport atual: a outra baixaria a imagem principal à toa.
+    desktop ? <DesktopNftDetail nft={nft} state={state} /> : <MobileNftDetail nft={nft} state={state} />
   )
 }
 
