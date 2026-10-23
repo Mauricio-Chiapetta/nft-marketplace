@@ -101,7 +101,11 @@ test.describe('contratos do mock', () => {
 
     expect((await call(page, '/orders/ord_seed_bruno', { token: ana })).status).toBe(404)
     expect((await call(page, '/orders/ord_seed_ana', { token: ana })).status).toBe(200)
-    expect((await call(page, '/me/wallets/wal_bruno_main', { method: 'PATCH', token: ana, body: { label: 'x1' } })).status).toBe(404)
+    // Alterar a carteira de outra conta: sem permissão (403); inexistente: 404.
+    const foreign = await call<ApiErrorBody>(page, '/me/wallets/wal_bruno_main', { method: 'PATCH', token: ana, body: { label: 'x1' } })
+    expect(foreign.status).toBe(403)
+    expect(foreign.body.error.code).toBe('FORBIDDEN')
+    expect((await call(page, '/me/wallets/wal_nao_existe', { method: 'PATCH', token: ana, body: { label: 'x1' } })).status).toBe(404)
     expect((await call(page, '/me/favorites')).status).toBe(401)
 
     const anaCart = await call<{ items: unknown[] }>(page, '/cart', { token: ana })
@@ -244,6 +248,11 @@ test.describe('contratos do mock', () => {
     expect(failed.status).toBe(500)
     expect(failed.body.error.code).toBe('INTERNAL_ERROR')
     expect((await call(page, '/health')).status).toBe(200)
+
+    await mock(page, 'setScenario', 'forbidden', 'GET /me/profile')
+    const forbidden = await call<ApiErrorBody>(page, '/me/profile')
+    expect(forbidden.status).toBe(403)
+    expect(forbidden.body.error.code).toBe('FORBIDDEN')
 
     await mock(page, 'setScenario', 'default')
     expect((await call(page, '/nfts')).status).toBe(200)

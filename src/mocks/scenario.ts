@@ -11,6 +11,8 @@ export const SCENARIOS = [
   'variable',
   /** HTTP 500. */
   'error',
+  /** HTTP 403 (acesso não autorizado). */
+  'forbidden',
   /** HTTP 503. */
   'unavailable',
   /** Falha de conexão (erro de rede). */

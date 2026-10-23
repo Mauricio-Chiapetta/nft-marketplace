@@ -40,8 +40,12 @@ function validateWalletFields(body: Record<string, unknown>, partial: boolean) {
   return { fields, values }
 }
 
+/** Carteira do usuário; de outra conta responde 403 (alteração sem permissão), inexistente 404. */
 function findOwnWallet(userId: string, walletId: unknown) {
-  return getDb().wallets.find((w) => w.id === walletId && w.userId === userId)
+  const wallet = getDb().wallets.find((w) => w.id === walletId)
+  if (!wallet) return { wallet: null, error: errors.notFound('Carteira não encontrada.') }
+  if (wallet.userId !== userId) return { wallet: null, error: errors.forbidden('Esta carteira pertence a outra conta.') }
+  return { wallet, error: null }
 }
 
 export const walletHandlers = [
@@ -88,8 +92,8 @@ export const walletHandlers = [
   http.patch('/api/me/wallets/:walletId', async ({ request, params }) => {
     const auth = requireUser(request)
     if (!auth.ok) return auth.response
-    const wallet = findOwnWallet(auth.user.id, params.walletId)
-    if (!wallet) return errors.notFound('Carteira não encontrada.')
+    const { wallet, error } = findOwnWallet(auth.user.id, params.walletId)
+    if (!wallet) return error
 
     const { fields, values } = validateWalletFields((await readJson(request)) ?? {}, true)
     const others = getDb().wallets.filter((w) => w.userId === auth.user.id && w.id !== wallet.id)
@@ -120,8 +124,8 @@ export const walletHandlers = [
   http.post('/api/me/wallets/:walletId/connect', async ({ request, params }) => {
     const auth = requireUser(request)
     if (!auth.ok) return auth.response
-    const wallet = findOwnWallet(auth.user.id, params.walletId)
-    if (!wallet) return errors.notFound('Carteira não encontrada.')
+    const { wallet, error } = findOwnWallet(auth.user.id, params.walletId)
+    if (!wallet) return error
     const network = (await readJson(request))?.network
     if (!isNetwork(network)) return errors.validation({ network: 'Selecione uma rede válida.' })
     if (scenarioIs('wallet-rejected')) {
@@ -138,8 +142,8 @@ export const walletHandlers = [
   http.delete('/api/me/wallets/:walletId/connection', ({ request, params }) => {
     const auth = requireUser(request)
     if (!auth.ok) return auth.response
-    const wallet = findOwnWallet(auth.user.id, params.walletId)
-    if (!wallet) return errors.notFound('Carteira não encontrada.')
+    const { wallet, error } = findOwnWallet(auth.user.id, params.walletId)
+    if (!wallet) return error
     mutate((db) => {
       delete db.walletConnections[wallet.id]
     })

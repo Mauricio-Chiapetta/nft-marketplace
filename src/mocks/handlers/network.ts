@@ -35,6 +35,9 @@ export const networkHandlers = [
       case 'error':
         await delay(DEFAULT_LATENCY_MS)
         return apiError(500, 'INTERNAL_ERROR', 'Erro inesperado no servidor. Tente novamente.')
+      case 'forbidden':
+        await delay(DEFAULT_LATENCY_MS)
+        return apiError(403, 'FORBIDDEN', 'Você não tem permissão para esta ação.')
       case 'unavailable':
         await delay(DEFAULT_LATENCY_MS)
         return apiError(503, 'SERVICE_UNAVAILABLE', 'Serviço temporariamente indisponível.')

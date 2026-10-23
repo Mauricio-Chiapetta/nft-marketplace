@@ -18,6 +18,7 @@ export const errors = {
     apiError(422, 'VALIDATION_ERROR', message, { fields }),
   unauthorized: () => apiError(401, 'UNAUTHORIZED', 'Faça login para continuar.'),
   sessionExpired: () => apiError(401, 'SESSION_EXPIRED', 'Sua sessão expirou. Entre novamente.'),
+  forbidden: (message = 'Você não tem permissão para esta ação.') => apiError(403, 'FORBIDDEN', message),
   notFound: (message = 'Recurso não encontrado.') => apiError(404, 'NOT_FOUND', message),
 }
 
